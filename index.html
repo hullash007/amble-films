@@ -393,6 +393,7 @@ footer{padding-block:clamp(48px,7vw,88px) 32px}
         </select>
       </div>
       <div class="field wide"><label for="f-msg">About the project</label><textarea id="f-msg" name="message" required></textarea></div>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
       <div class="form-foot">
         <button class="btn dark" type="submit">Send enquiry</button>
         <span class="form-note" id="form-note" role="status"></span>
@@ -437,7 +438,7 @@ const FILMS = [
   { title: "Chapter film",         kind: "Education",     src: "videos/WhatsApp%20Video%202026-11-18%20at%2019.06.50.mp4", poster: "" },
   { title: "Above the clouds",     kind: "Visual study",  src: "videos/coverr-ai-generated-sunset-rays-above-the-clouds-1080p.mp4", poster: "" },
   { title: "The abandoned pool",   kind: "Visual study",  src: "videos/coverr-ai-generated-nature-reclaims-abandoned-pool-area-1080p.mp4", poster: "" },
-  { title: "Untitled study",       kind: "Visual study",  src: "videos/user-ai-generation-MzMzhNLHP3yP-1080p.mp4", poster: "" }
+  { title: "Liquid Gold",          kind: "Product film",   src: "videos/user-ai-generation-MzMzhNLHP3yP-1080p.mp4", poster: "" }
 ];
 
 /* ===================================================================== */
@@ -547,10 +548,37 @@ $("player-close").addEventListener("click", () => player.close());
 player.addEventListener("click", e => { if (e.target === player) player.close(); });
 player.addEventListener("close", () => { stage.innerHTML = ""; });
 
-/* Enquiry: opens the visitor's email app with the message filled in */
+/* Enquiry: sent to your inbox through FormSubmit (formsubmit.co), no email app needed */
 $("enquiry-form").addEventListener("submit", e => {
   e.preventDefault();
   const d = new FormData(e.target);
+  if (d.get("_honey")) return;
+  const note = $("form-note"), btn = e.target.querySelector("button[type=submit]");
+  btn.disabled = true; btn.textContent = "Sending";
+  note.textContent = "";
+  fetch("https://formsubmit.co/ajax/" + EMAIL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({
+      _subject: d.get("kind") + " enquiry from " + d.get("name"),
+      _replyto: d.get("email"),
+      _template: "table",
+      Name: d.get("name"),
+      Email: d.get("email"),
+      Company: d.get("company") || "Not given",
+      Need: d.get("kind"),
+      Project: d.get("message")
+    })
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (String(res.success) !== "true") throw new Error(res.message || "Not sent");
+    e.target.reset();
+    note.textContent = "Enquiry sent. We will reply to you by email.";
+  })
+  .catch(() => { note.textContent = "Your enquiry was not sent. Please email us at " + EMAIL + "."; })
+  .finally(() => { btn.disabled = false; btn.textContent = "Send enquiry"; });
+  return;
   const subject = d.get("kind") + " enquiry from " + d.get("name");
   const body = d.get("message") + "\n\n" + d.get("name") + (d.get("company") ? "\n" + d.get("company") : "") + "\n" + d.get("email");
   location.href = "mailto:" + EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
