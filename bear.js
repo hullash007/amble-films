@@ -1,8 +1,14 @@
-/* Amble Films: the walking bear.
+/* Amble Films: the living bear.
    The bear is the outline from the Amble Films logo itself, filled solid and
    moved by a small skeleton (body, head, four two-part legs and paws), so it
-   bends as one continuous shape. It walks in from the left, sniffs the foot of
-   the "A", climbs over it, settles on top of the wordmark and then idles.
+   bends as one continuous shape.
+
+   The bear does not walk: its four paws stay planted, which keeps its legs in
+   their natural logo shape. On load it stands on the ground, the word "Amble"
+   rises up underneath it and lifts it into the logo position, and from then on
+   it idles: breathing, sniffing the letters, scenting the air, shifting its
+   weight and lifting a paw.
+
    All positions are in the logo's own coordinates (viewBox 0 0 765 344). */
 (function () {
 "use strict";
@@ -11,71 +17,26 @@ const NS = "http://www.w3.org/2000/svg", TAU = Math.PI * 2;
 const lerp = (a, b, t) => a + (b - a) * t;
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 const smooth = x => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); };
-const frac = x => x - Math.floor(x);
 const f1 = n => (Math.round(n * 10) / 10).toString();
 const rnd = (a, b) => a + Math.random() * (b - a);
 
-/* ---------- The ground: the line the bear walks along ---------- */
-const G = [
-  [-700, 251], [24, 251],            // the baseline, left of the wordmark
-  [41, 227], [92, 91], [101, 80],    // up the left side of the A
-  [125, 80], [132, 88], [152, 138],  // across the top of the A and down its right side
-  [210, 138], [430, 138]             // onto the m and along its top
-];
-const C = [0];
-for (let i = 1; i < G.length; i++) C[i] = C[i - 1] + Math.hypot(G[i][0] - G[i - 1][0], G[i][1] - G[i - 1][1]);
-const END = C[C.length - 1];
-function pt(a) {
-  a = clamp(a, 0, END);
-  let i = 0;
-  while (i < G.length - 2 && C[i + 1] < a) i++;
-  const f = (a - C[i]) / (C[i + 1] - C[i]);
-  return [lerp(G[i][0], G[i + 1][0], f), lerp(G[i][1], G[i + 1][1], f)];
-}
-function frame(a, w) {
-  const p = pt(a - w), q = pt(a + w);
-  let dx = q[0] - p[0], dy = q[1] - p[1];
-  const l = Math.hypot(dx, dy) || 1;
-  dx /= l; dy /= l;
-  return { x: (p[0] + q[0]) / 2, y: (p[1] + q[1]) / 2, tx: dx, ty: dy, nx: dy, ny: -dx };
-}
-const arcAt = (seg, x) => C[seg] + (x - G[seg][0]) / (G[seg + 1][0] - G[seg][0]) * (C[seg + 1] - C[seg]);
-
 /* ---------- Proportions, measured from the logo bear ---------- */
-const SL = 96;          // distance covered by one full walk cycle
-const BETA = 0.75;      // share of the cycle each paw spends on the ground
+const GY = 138;         // the line the paws stand on (top of the letters)
+const LIFT = 113;       // how far below that the ground is before the word lifts the bear
+const SINK = 182;       // how far down the word starts, hidden in the ground
+const X = 235.4;        // where the hips are
 const L = 120;          // hip to shoulder
 const HIP = 70, SHO = 74;
 const NECK = [112, -30], NOSE = 69;
 const LEN = { hind: [36, 34], front: [38, 36] };
-const GAP = [C[7] + 3, C[8] - 3];   // empty space between the A and the m: no paw may land here
-const snap = a => (a > GAP[0] && a < GAP[1]) ? (a < (GAP[0] + GAP[1]) / 2 ? GAP[0] - 5 : GAP[1] + 7) : a;
-
-/* ---------- The route ---------- */
-const S_END = arcAt(8, 235.4);          // standing place on the m, matching the logo
-const S1 = S_END - Math.round((S_END - arcAt(0, -168)) / SL) * SL;   // first stop, nose at the foot of the A
-const S0 = S1 - 1.25 * SL;              // where the bear appears
-const PH0 = 0.515 - frac(S_END / SL);   // lines the gait up so all four paws are down at each stop
-const TA = 2.0, TB0 = 4.6;
-
-/* The climb, worked out ahead of time: brisk on the flat, careful over the A, easing to a stop */
-const ROUTE = [];
-(function () {
-  let s = S1, t = 0; const dt = 1 / 120;
-  while (s < S_END - 0.02 && t < 30) {
-    const care = smooth((s - (C[1] - 110)) / 70) * (1 - smooth((s - C[6]) / 70));
-    const v = Math.min(112 * lerp(1, 0.66, care) * smooth(t / 0.8) + 3, Math.sqrt(2 * 80 * (S_END - s)) + 3);
-    s = Math.min(S_END, s + v * dt); ROUTE.push(s); t += dt;
-  }
-})();
-const TB1 = TB0 + ROUTE.length / 120, T_INTRO = TB1 + 3.1;
-
-const LEGS = [
-  { front: false, ph: 0.00 },   // hind, set back when standing
-  { front: false, ph: 0.50 },   // hind, set forward
-  { front: true,  ph: 0.22 },   // front, set back
-  { front: true,  ph: 0.72 }    // front, set forward
+const LEGS = [                       // where each paw stands, measured from its joint
+  { front: false, at: -12.6 }, { front: false, at: 32.4 },
+  { front: true,  at: -32.4 }, { front: true,  at: 12.6 }
 ];
+const PLUMP = 2.5;                   // how much the outline is filled out for a chubbier bear (0 = exactly the logo)
+
+/* ---------- Timing of the entrance ---------- */
+const T_SNIFF = 0.9, TR0 = 2.5, TR1 = 4.8, T_INTRO = 7.6;
 const IDLE = ["ground", "air", "shift", "paw", "low", "ground", "air"];
 
 class Bear {
@@ -87,31 +48,29 @@ class Bear {
       this.path.setAttribute("fill", o.ink || "#000");
       root.appendChild(this.path);
     }
-    this.t = 0; this.s = this.probe ? S_END : S0; this.af = this.s + L;
-    this.walk = this.probe ? 0 : 1; this.sn = 0; this.th = 0.23; this.thV = 0;
-    this.lean = 0; this.pawUp = 0; this.fade = 0;
+    this.t = 0; this.sn = 0; this.th = 0.23; this.thV = 0;
+    this.lean = 0; this.dip = 0; this.paw = 0; this.fade = 0;
     this.idle = null; this.nextIdle = T_INTRO + 2.5; this.lastIdle = "";
     this.sk = null; this.breath = 1;
+    this.wordY = 0; this.bearY = 0; this.films = 1;
   }
 
-  /* What the bear is doing at time t */
+  /* What is happening at time t */
   script(t) {
-    const r = { s: S_END, sniff: 0, look: null, air: 0, lean: 0, paw: 0 };
+    const r = { sniff: 0, look: null, air: 0, lean: 0, dip: 0, paw: 0, wordY: 0, bearY: 0 };
     if (this.probe) return r;
-    if (t < TA) {
-      r.s = S0 + (S1 - S0) * (1 - Math.pow(1 - t / TA, 1.7));
-      if (t > TA - 0.3) r.sniff = 1;
-    } else if (t < TB0) {
-      r.s = S1;
-      if (t - TA < 1.7) r.sniff = 1; else r.look = -0.42;      // sniff the A, then look up it
-    } else if (t < TB1) {
-      const fi = (t - TB0) * 120, i0 = Math.min(Math.floor(fi), ROUTE.length - 1), before = i0 ? ROUTE[i0 - 1] : S1;
-      r.s = before + (ROUTE[i0] - before) * clamp(fi - i0, 0, 1);
-      if (t > TB1 - 0.25) r.sniff = 1;
-    } else if (t < TB1 + 1.9) {
-      r.sniff = 1;                                             // sniff the letters underfoot
+    if (t < TR0) {                                             // standing on the ground, nose down
+      r.wordY = SINK; r.bearY = LIFT;
+      if (t > T_SNIFF && t < TR0 - 0.3) r.sniff = 1;
+    } else if (t < TR1) {                                      // the word comes up and lifts the bear
+      r.wordY = SINK * (1 - smooth((t - TR0) / (TR1 - TR0)));
+      r.bearY = Math.min(r.wordY, LIFT);
+      r.dip = smooth((LIFT - r.wordY) / 16) * (1 - smooth((t - (TR1 - 0.5)) / 0.5));   // braces as the ground moves
+      r.look = 0.5;
+    } else if (t < TR1 + 1.7) {
+      r.sniff = 1;                                             // sniffs the letters underfoot
     } else if (t < T_INTRO) {
-      r.look = -0.2; r.air = 1;                                // lift the head, scent the air
+      r.look = -0.2; r.air = 1;                                // lifts the head, scents the air
     } else if (this.idle) {
       const x = (t - this.idle.t0) / this.idle.dur, env = smooth(x * 4) * smooth((1 - x) * 4);
       if (x >= 1) { this.idle = null; this.nextIdle = t + rnd(3.5, 8); }
@@ -133,131 +92,69 @@ class Bear {
     this.idle = { type: pick, t0: this.t, dur: pick === "paw" ? 1.6 : pick === "shift" ? 2.8 : rnd(2.4, 3.4) };
   }
 
-  footAt(leg, i, ref) {
-    const c = ref / SL + leg.ph + PH0, k = Math.floor(c), p = c - k;
-    const base = leg.front ? L : 0;
-    const F = j => snap(SL * (j - leg.ph - PH0) + BETA * SL / 2 + base);
-    let arc, lift = 0, pitch = 0;
-    if (p < BETA) arc = F(k);
-    else {
-      const u = (p - BETA) / (1 - BETA), a0 = F(k), a1 = F(k + 1);
-      arc = lerp(a0, a1, smooth(u));
-      lift = (leg.front ? 15 : 13) * Math.sin(Math.PI * Math.pow(u, 0.85)) * clamp(Math.abs(a1 - a0) / 70, 0.35, 1.7);
-      pitch = Math.sin(Math.PI * u) * (0.7 * (1 - u) - 0.3 * u);
-    }
-    if (i === 3 && this.pawUp > 0) { lift += 13 * this.pawUp; pitch += 0.5 * this.pawUp; }
-    const f = frame(arc, 5);
-    let ux = f.nx * 0.6, uy = f.ny * 0.6 - 0.4;
-    const ul = Math.hypot(ux, uy); ux /= ul; uy /= ul;
-    const ca = Math.cos(pitch), sa = Math.sin(pitch);
-    const tx = f.tx * ca - f.ty * sa, ty = f.tx * sa + f.ty * ca;
-    const x = f.x + ux * lift, y = f.y + uy * lift;
-    return { tx, ty, ax: x + ty * 10 - tx, ay: y - tx * 10 - ty, grip: clamp(1 - lift / 5, 0, 1) };
-  }
-
   step(dt) {
     if (!(dt > 0.0005)) return;
     this.t += dt;
     const t = this.t, sc = this.script(t);
-    const v = (sc.s - this.s) / dt;
-    this.s = sc.s;
-    this.walk += (clamp(Math.abs(v) / 45, 0, 1) - this.walk) * (1 - Math.exp(-dt * 6));
     this.sn += (sc.sniff - this.sn) * (1 - Math.exp(-dt * 5));
-    this.lean += (sc.lean - this.lean) * (1 - Math.exp(-dt * 8));
-    this.pawUp = sc.paw;
-    this.fade = clamp(t / 0.6, 0, 1);
+    this.lean += (sc.lean - this.lean) * (1 - Math.exp(-dt * 10));
+    this.dip += (sc.dip - this.dip) * (1 - Math.exp(-dt * 7));
+    this.paw = sc.paw;
+    this.air = (this.air || 0) + (sc.air - (this.air || 0)) * (1 - Math.exp(-dt * 5));
+    this.fade = clamp(t / 0.7, 0, 1);
+    this.wordY = sc.wordY; this.bearY = sc.bearY;
+    this.films = this.probe ? 1 : smooth((t - (TR1 - 0.4)) / 0.9);
 
-    /* Body: hips over the hind paws, shoulders found further along the ground */
-    const s = this.s, cH = s / SL + PH0;
-    const hipH = HIP + this.walk * 2.4 * Math.cos(TAU * 2 * cH);
-    const anchor = (a, h) => {            // a point h above the ground, leaning out from slopes
-      const f = frame(a, 34), p = frame(a, 10);
-      let ux = f.nx * 0.45, uy = f.ny * 0.45 - 0.55; const l = Math.hypot(ux, uy);
-      return [p.x + ux / l * h, p.y + uy / l * h];
-    };
-    const Hp = anchor(s, hipH);
-    let Hx = Hp[0], Hy = Hp[1];
-    const shoH = SHO - 10 * this.sn + this.walk * 2.8 * Math.cos(TAU * 2 * cH + 1.2);
-    const g = a => { const p = anchor(a, shoH); return Math.hypot(p[0] - Hx, p[1] - Hy) - L; };
-    let a = this.af, ga = g(a);           // follow the nearest solution so the shoulders never jump
-    for (let i = 0; i < 14 && Math.abs(ga) > 0.05; i++) {
-      const sl = (g(a + 0.5) - g(a - 0.5));
-      a += Math.abs(sl) < 0.06 ? (ga < 0 ? 1 : -1) : clamp(-ga / sl, -2, 2);
-      ga = g(a);
-    }
-    this.af = clamp(a, Math.max(this.af - 7, s + 40), this.af + 7);
-    const Sp = anchor(this.af, shoH);
-    let Sx = Sp[0], Sy = Sp[1];
-
-    /* Paws */
-    const feet = LEGS.map((leg, i) => this.footAt(leg, i, leg.front ? this.af - L : s));
-
-    /* Keep every planted paw within reach of its joint */
-    for (let pass = 0; pass < 2; pass++) {
-      LEGS.forEach((leg, i) => {
-        const ft = feet[i], len = leg.front ? LEN.front : LEN.hind, R = len[0] + len[1] - 2;
-        const jx = leg.front ? Sx : Hx, jy = leg.front ? Sy : Hy;
-        const dx = ft.ax - jx, dy = ft.ay - jy, d = Math.hypot(dx, dy);
-        let m = 0;
-        if (d > R) m = (d - R) * 0.55 * ft.grip; else if (d < 34) m = (d - 34) * 0.55;
-        if (m) { if (leg.front) { Sx += dx / d * m; Sy += dy / d * m; } else { Hx += dx / d * m; Hy += dy / d * m; } }
-      });
-      const mx = (Hx + Sx) / 2, my = (Hy + Sy) / 2;
-      let dx = Sx - Hx, dy = Sy - Hy; const d = Math.hypot(dx, dy) || 1; dx /= d; dy /= d;
-      const ln = pass ? 0 : this.lean;
-      Hx = mx - dx * L / 2 + dx * ln; Hy = my - dy * L / 2 + dy * ln;
-      Sx = Hx + dx * L; Sy = Hy + dy * L;
-    }
-    const ang0 = Math.atan2(Sy - Hy, Sx - Hx);
-    if (this.fH) {                        // a little inertia, so the body never snaps
-      const kf = 1 - Math.exp(-dt * 15);
-      this.fH[0] += (Hx - this.fH[0]) * kf; this.fH[1] += (Hy - this.fH[1]) * kf; this.fA += (ang0 - this.fA) * kf;
-    } else { this.fH = [Hx, Hy]; this.fA = ang0; }
-    Hx = this.fH[0]; Hy = this.fH[1];
-    const ang = this.fA, ca = Math.cos(ang), sa = Math.sin(ang);
-    Sx = Hx + ca * L; Sy = Hy + sa * L;
+    /* Body: hips and shoulders, shifted by leaning, bracing and sniffing */
+    const Hx = X + this.lean, Hy = GY - HIP + 7 * this.dip;
+    const sx0 = X + L + this.lean, sy0 = GY - SHO + 10 * this.sn + 5 * this.dip;
+    const ang = Math.atan2(sy0 - Hy, sx0 - Hx), ca = Math.cos(ang), sa = Math.sin(ang);
+    const Sx = Hx + ca * L, Sy = Hy + sa * L;
     const loc = (x, y) => [Hx + x * ca - y * sa, Hy + x * sa + y * ca];
 
     /* Head */
     const N = loc(NECK[0] + 6 * this.sn, NECK[1] + 13 * this.sn);
-    let target = ang * 0.55 + 0.23 + this.walk * 0.05 * Math.sin(TAU * 2 * cH + 0.6), ext = 0;
+    let target = ang * 0.8 + 0.23, ext = 0;
     if (sc.look !== null) target = sc.look;
     if (this.sn > 0.02) {
-      const tp = pt(this.af + 46), dx = tp[0] - N[0], dy = tp[1] - 6 - N[1];
-      target = lerp(target, clamp(Math.atan2(dy, dx) - 0.16, -0.9, 1.0), smooth(this.sn));
+      const dx = Sx + 66 - N[0], dy = GY - 8 - N[1];          // nose reaches down and forward, clear of the front legs
+      target = lerp(target, clamp(Math.atan2(dy, dx) - 0.16, -0.9, 0.85), smooth(this.sn));
       ext = clamp(Math.hypot(dx, dy) - NOSE, -3, 8) * this.sn;
     }
-    if (sc.air) ext = 4;
+    ext += 4 * this.air;
     const w = 9.5;
     this.thV += (w * w * (target - this.th) - 2 * w * this.thV) * dt;
     this.th += this.thV * dt;
-    const sniffing = Math.max(this.sn > 0.6 ? this.sn : 0, sc.air);
+    const sniffing = Math.max(smooth((this.sn - 0.4) / 0.5), this.air);
     const th = this.th + sniffing * (0.03 * Math.sin(TAU * 6.5 * t) * (0.55 + 0.45 * Math.sin(TAU * 0.8 * t)) + 0.06 * Math.sin(TAU * 0.42 * t));
 
-    /* Skeleton: body, head, then upper leg, lower leg and paw for each leg */
+    /* Skeleton: body, head, then upper leg, lower leg and paw for each leg. Paws stay where they stand. */
     const sk = [{ x: Hx, y: Hy, a: ang }, { x: N[0] + Math.cos(th) * ext, y: N[1] + Math.sin(th) * ext, a: th }];
     LEGS.forEach((leg, i) => {
-      const ft = feet[i], jx = leg.front ? Sx : Hx, jy = leg.front ? Sy : Hy;
+      const jx = leg.front ? Sx : Hx, jy = leg.front ? Sy : Hy;
       const len = leg.front ? LEN.front : LEN.hind, l1 = len[0], l2 = len[1];
-      const dx = ft.ax - jx, dy = ft.ay - jy, d0 = Math.hypot(dx, dy) || 1;
-      const d = clamp(d0, 0.62 * (l1 + l2), l1 + l2 - 0.4), ux = dx / d0, uy = dy / d0;   // never fold a leg up tight
-      const ax = jx + ux * d, ay = jy + uy * d;                 // if out of reach, the paw follows the leg
+      const up = i === 3 ? 13 * this.paw : 0, pitch = i === 3 ? 0.45 * this.paw : 0;      // the front paw that lifts now and then
+      const tx = Math.cos(pitch), ty = Math.sin(pitch);
+      const fx = (leg.front ? X + L : X) + leg.at, fy = GY - up;
+      const tax = fx + ty * 10 - tx, tay = fy - tx * 10 - ty;
+      const dx = tax - jx, dy = tay - jy, d0 = Math.hypot(dx, dy) || 1;
+      const d = clamp(d0, 14, l1 + l2 - 0.4), ux = dx / d0, uy = dy / d0;
+      const ax = jx + ux * d, ay = jy + uy * d;
       const al = (l1 * l1 - l2 * l2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, l1 * l1 - al * al));
       const sgn = leg.front ? 1 : -1;
       const kx = jx + ux * al - uy * h * sgn, ky = jy + uy * al + ux * h * sgn;
-      const lowA = Math.atan2(ay - ky, ax - kx), over = clamp((d0 - (l1 + l2 - 0.4)) / 14, 0, 1);
       sk.push({ x: jx, y: jy, a: Math.atan2(ky - jy, kx - jx) },
-              { x: kx, y: ky, a: lowA },
-              { x: ax, y: ay, a: lerp(Math.atan2(ft.ty, ft.tx), lowA - 1.45, over) });   // a trailing paw hangs from the leg
+              { x: kx, y: ky, a: Math.atan2(ay - ky, ax - kx) },
+              { x: ax, y: ay, a: pitch });
     });
     this.sk = sk;
-    this.breath = 1 + 0.016 * Math.sin(TAU * 0.28 * t) * (1 - this.walk);
+    this.breath = 1 + 0.016 * Math.sin(TAU * 0.28 * t);
   }
 
-  render() {
+  render(stage) {
     const sk = this.sk, skin = this.skin;
     if (!sk || !skin || !this.path) return;
-    const n = skin.n, K = skin.K, I = skin.idx, X = skin.lx, Y = skin.ly, W = skin.w;
+    const n = skin.n, K = skin.K, I = skin.idx, LX = skin.lx, LY = skin.ly, W = skin.w;
     const cs = sk.map(b => Math.cos(b.a)), sn = sk.map(b => Math.sin(b.a));
     const px = new Float32Array(n), py = new Float32Array(n);
     for (let i = 0; i < n; i++) {
@@ -265,12 +162,13 @@ class Bear {
       for (let j = 0; j < K; j++) {
         const q = i * K + j, wgt = W[q];
         if (!wgt) continue;
-        const b = I[q], lx = X[q], ly = b === 0 ? Y[q] * this.breath : Y[q];
+        const b = I[q], lx = LX[q], ly = b === 0 ? LY[q] * this.breath : LY[q];
         x += wgt * (sk[b].x + lx * cs[b] - ly * sn[b]);
         y += wgt * (sk[b].y + lx * sn[b] + ly * cs[b]);
       }
       px[i] = x; py[i] = y;
     }
+    this.px = px; this.py = py;
     let d = "M" + f1((px[n - 1] + px[0]) / 2) + " " + f1((py[n - 1] + py[0]) / 2);
     for (let i = 0; i < n; i++) {
       const k = (i + 1) % n;
@@ -278,6 +176,11 @@ class Bear {
     }
     this.path.setAttribute("d", d + "Z");
     this.root.setAttribute("opacity", f1(this.fade));
+    this.root.setAttribute("transform", "translate(0 " + f1(this.bearY) + ")");
+    if (stage) {
+      stage.word.setAttribute("transform", "translate(0 " + f1(this.wordY) + ")");
+      stage.films.setAttribute("opacity", this.films.toFixed(2));
+    }
   }
 
   advance(seconds) { for (let i = 0, n = Math.round(seconds * 60); i < n; i++) this.step(1 / 60); }
@@ -289,19 +192,38 @@ function segDist(px, py, ax, ay, bx, by) {
   const u = clamp(((px - ax) * dx + (py - ay) * dy) / l2, 0, 1);
   return Math.hypot(px - ax - dx * u, py - ay - dy * u);
 }
+/* Fill the outline out a little for a heavier, chubbier bear. Same height, paws on the same line. */
+function plump(P, grow) {
+  const n = P.length;
+  const blur = Q => Q.map((_, i) => { let x = 0, y = 0; for (let o = -1; o <= 1; o++) { const p = Q[(i + o + n) % n]; x += p[0]; y += p[1]; } return [x / 3, y / 3]; });
+  let area = 0, top = 1e9, bottom = -1e9;
+  P.forEach((p, i) => { const q = P[(i + 1) % n]; area += p[0] * q[1] - q[0] * p[1]; top = Math.min(top, p[1]); bottom = Math.max(bottom, p[1]); });
+  const out = area > 0 ? 1 : -1;
+  let Q = P.map((p, i) => {
+    const a = P[(i - 3 + n) % n], b = P[(i + 3) % n], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1;
+    return [p[0] + out * dy / l * grow, p[1] - out * dx / l * grow];
+  });
+  Q = blur(Q);
+  let lo = 1e9, hi = -1e9, left = 1e9, right = -1e9;
+  Q.forEach(p => { lo = Math.min(lo, p[1]); hi = Math.max(hi, p[1]); left = Math.min(left, p[0]); right = Math.max(right, p[0]); });
+  const f = (bottom - top) / (hi - lo), cx = (left + right) / 2;
+  return Q.map(p => [cx + (p[0] - cx) * f, bottom + (p[1] - hi) * f]);
+}
 function makeSkin(svg, d, ox, oy, count) {
   /* 1. Trace the outside edge of the logo bear */
   const end = d.search(/z/i);
   const tmp = document.createElementNS(NS, "path");
   tmp.setAttribute("d", end > 0 ? d.slice(0, end + 1) : d);
   svg.appendChild(tmp);
-  const total = tmp.getTotalLength(), n = count || 440, P = [];
+  const total = tmp.getTotalLength(), n = count || 440;
+  let P = [];
   for (let i = 0; i < n; i++) { const q = tmp.getPointAtLength(total * i / n); P.push([q.x + ox, q.y + oy]); }
   svg.removeChild(tmp);
+  if (PLUMP) P = plump(P, PLUMP);
 
   /* 2. The skeleton in its standing pose, which matches the logo */
   const probe = new Bear(null, { probe: true });
-  probe.advance(2);
+  probe.advance(1);
   const rest = probe.sk.map(b => ({ x: b.x, y: b.y, a: b.a }));
   const at = (b, x, y) => [rest[b].x + x * Math.cos(rest[b].a) - y * Math.sin(rest[b].a), rest[b].y + x * Math.sin(rest[b].a) + y * Math.cos(rest[b].a)];
   const segs = [[at(0, 0, 0), at(0, L - 14, 0), 36], [at(1, 26, 0), at(1, 60, 9), 22]];
@@ -310,17 +232,17 @@ function makeSkin(svg, d, ox, oy, count) {
     segs.push([at(b, 0, 0), at(b, len[0], 0), 13], [at(b + 1, 0, 0), at(b + 1, len[1], 0), 10], [at(b + 2, -5, 3), at(b + 2, 14, 3), 8]);
   });
 
-  /* 3. Tie each point of the outline to the nearest bones */
+  /* 3. Tie each point of the outline to the nearest bones... */
   const K = 4, NB = segs.length;
   const idx = new Uint8Array(n * K), lx = new Float32Array(n * K), ly = new Float32Array(n * K), w = new Float32Array(n * K);
   let raw = P.map(p => {
     const dist = segs.map(s => Math.max(0, segDist(p[0], p[1], s[0][0], s[0][1], s[1][0], s[1][1]) - s[2]));
     let own = 0, best = 1e9;                 // each point may follow the body, the head and one leg only
-    for (let b = 2; b < segs.length; b++) if (dist[b] < best) { best = dist[b]; own = Math.floor((b - 2) / 3); }
-    const sc = [];
-    dist.forEach((dd, b) => { if (b < 2 || Math.floor((b - 2) / 3) === own) sc.push([b, 1 / Math.pow(dd + 3, 3)]); });
-    const row = new Float32Array(NB), sum = sc.reduce((t, e) => t + e[1], 0);
-    sc.forEach(e => { row[e[0]] = e[1] / sum; });
+    for (let b = 2; b < NB; b++) if (dist[b] < best) { best = dist[b]; own = Math.floor((b - 2) / 3); }
+    const row = new Float32Array(NB);
+    let sum = 0;
+    dist.forEach((dd, b) => { if (b < 2 || Math.floor((b - 2) / 3) === own) { row[b] = 1 / Math.pow(dd + 3, 3); sum += row[b]; } });
+    for (let b = 0; b < NB; b++) row[b] /= sum;
     return row;
   });
   /* ...then even the ties out along the outline, so joints bend instead of tearing */
@@ -339,14 +261,28 @@ function makeSkin(svg, d, ox, oy, count) {
       idx[q] = b; w[q] = e[1] / sum; lx[q] = dx * c + dy * s; ly[q] = -dx * s + dy * c;
     });
   });
-  return { n, K, idx, lx, ly, w, rest, segs, points: P };
+  return { n, K, idx, lx, ly, w };
+}
+
+/* ---------- The wordmark: "Amble" starts in the ground and rises ---------- */
+function makeStage(group) {
+  const svg = group.ownerSVGElement, kids = Array.from(group.children);
+  if (!svg || kids.length < 9) return null;                 // expects the four "Amble" shapes, then the five "FILMS" letters
+  const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  const defs = svg.querySelector("defs") || svg.insertBefore(document.createElementNS(NS, "defs"), svg.firstChild);
+  const clip = mk("clipPath", { id: "amble-ground" }, defs);
+  mk("rect", { x: -600, y: -300, width: 2000, height: 556 }, clip);       // everything above the ground line (y = 256)
+  const outer = mk("g", { "clip-path": "url(#amble-ground)" }, group), word = mk("g", {}, outer), films = mk("g", {}, group);
+  kids.slice(0, 4).forEach(k => word.appendChild(k));
+  kids.slice(4).forEach(k => films.appendChild(k));
+  return { word, films };
 }
 
 /* ---------- Start it on the page ---------- */
-function mount(root, skin, opts) {
-  const bear = new Bear(root, Object.assign({ skin }, opts || {}));
+function mount(root, skin, stage) {
+  const bear = new Bear(root, { skin });
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    bear.advance(T_INTRO + 0.5); bear.render();
+    bear.advance(T_INTRO + 0.5); bear.render(stage);
     return bear;
   }
   let last = 0;
@@ -356,23 +292,24 @@ function mount(root, skin, opts) {
     const dt = last ? Math.min((now - last) / 1000, 0.05) : 1 / 60;
     if (dt < 0.002) return;
     last = now;
-    bear.step(dt); bear.render();
+    bear.step(dt); bear.render(stage);
   }
-  bear.step(1 / 60); bear.render();
+  bear.step(1 / 60); bear.render(stage);
   requestAnimationFrame(tick);
   return bear;
 }
 
-window.AmbleBear = { Bear, mount, makeSkin, T_INTRO };
+window.AmbleBear = { Bear, mount, makeSkin, makeStage, T_INTRO };
 
 const rig = document.getElementById("bear-rig");
 const art = document.querySelector("#amble-bear-art path");
+const letters = document.getElementById("amble-letters");
 if (rig && art) {
   const m = /translate\(\s*([-\d.]+)[ ,]+([-\d.]+)/.exec(art.getAttribute("transform") || "");
   const skin = makeSkin(rig.ownerSVGElement, art.getAttribute("d"), m ? +m[1] : 0, m ? +m[2] : 0);
   const still = document.getElementById("bear-static");
   if (still) still.style.display = "none";
-  const bear = mount(rig, skin);
+  const bear = mount(rig, skin, letters ? makeStage(letters) : null);
   const logo = rig.closest(".logo");
   if (logo) logo.addEventListener("pointerenter", () => bear.startIdle(Math.random() < 0.5 ? "ground" : "air"));
 }
