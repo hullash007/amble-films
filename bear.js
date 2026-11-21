@@ -36,7 +36,9 @@ const LEGS = [                       // where each paw stands, measured from its
 const PLUMP = 2.5;                   // how much the outline is filled out for a chubbier bear (0 = exactly the logo)
 
 /* ---------- Timing of the entrance ---------- */
-const T_SNIFF = 0.9, TR0 = 2.5, TR1 = 4.8, T_INTRO = 7.6;
+const T_SNIFF = 0.9, TR0 = 2.5, TR1 = 4.8;   // the "m" rises under the bear
+const TA0 = TR1 + 0.5, TA1 = TA0 + 1.4;      // then the "A" comes up beside it
+const T_INTRO = TA1 + 2.2;
 const IDLE = ["ground", "air", "shift", "low", "ground", "air"];   // no leg movements: the legs always keep their logo shape
 
 class Bear {
@@ -52,13 +54,14 @@ class Bear {
     this.lean = 0; this.dip = 0; this.paw = 0; this.fade = 0;
     this.idle = null; this.nextIdle = T_INTRO + 2.5; this.lastIdle = "";
     this.sk = null; this.breath = 1;
-    this.wordY = 0; this.bearY = 0; this.films = 1;
+    this.wordY = 0; this.aY = 0; this.bearY = 0; this.films = 1;
   }
 
   /* What is happening at time t */
   script(t) {
-    const r = { sniff: 0, look: null, air: 0, lean: 0, dip: 0, paw: 0, wordY: 0, bearY: 0 };
+    const r = { sniff: 0, look: null, air: 0, lean: 0, dip: 0, paw: 0, wordY: 0, aY: 0, bearY: 0 };
     if (this.probe) return r;
+    r.aY = t < TA0 ? SINK : SINK * (1 - smooth((t - TA0) / (TA1 - TA0)));
     if (t < TR0) {                                             // standing on the ground, nose down
       r.wordY = SINK; r.bearY = LIFT;
       if (t > T_SNIFF && t < TR0 - 0.3) r.sniff = 1;
@@ -67,15 +70,15 @@ class Bear {
       r.bearY = Math.min(r.wordY, LIFT);
       r.dip = smooth((LIFT - r.wordY) / 16) * (1 - smooth((t - (TR1 - 0.5)) / 0.5));   // braces as the ground moves
       r.look = 0.4;
-    } else if (t < TR1 + 1.7) {
-      r.sniff = 1;                                             // sniffs the letters underfoot
+    } else if (t < TA1 + 0.6) {
+      r.sniff = 1;                                             // sniffs the letter underfoot while the A arrives
     } else if (t < T_INTRO) {
-      r.look = -0.2; r.air = 1;                                // lifts the head, scents the air
+      r.look = 0.08; r.air = 1;                                // lifts the head a little, scents the air
     } else if (this.idle) {
       const x = (t - this.idle.t0) / this.idle.dur, env = smooth(x * 4) * smooth((1 - x) * 4);
       if (x >= 1) { this.idle = null; this.nextIdle = t + rnd(3.5, 8); }
       else if (this.idle.type === "ground") { if (x < 0.8) r.sniff = 1; }
-      else if (this.idle.type === "air") { if (x < 0.8) { r.look = -0.22; r.air = 1; } }
+      else if (this.idle.type === "air") { if (x < 0.8) { r.look = 0.08; r.air = 1; } }
       else if (this.idle.type === "low") { if (x < 0.8) r.look = 0.4; }
       else if (this.idle.type === "shift") r.lean = 7 * env * Math.sin(x * TAU);
       else if (this.idle.type === "paw") r.paw = env;
@@ -102,8 +105,8 @@ class Bear {
     this.paw = sc.paw;
     this.air = (this.air || 0) + (sc.air - (this.air || 0)) * (1 - Math.exp(-dt * 5));
     this.fade = clamp(t / 0.7, 0, 1);
-    this.wordY = sc.wordY; this.bearY = sc.bearY;
-    this.films = this.probe ? 1 : smooth((t - (TR1 - 0.4)) / 0.9);
+    this.wordY = sc.wordY; this.aY = sc.aY; this.bearY = sc.bearY;
+    this.films = this.probe ? 1 : smooth((t - (TA1 - 0.4)) / 0.9);
 
     /* Body: hips and shoulders, shifted by leaning, bracing and sniffing */
     const Hx = X + this.lean, Hy = GY - HIP + 7 * this.dip;
@@ -121,7 +124,7 @@ class Bear {
       target = lerp(target, clamp(Math.atan2(dy, dx) - 0.16, -0.9, 0.6), smooth(this.sn));   // a gentle dip of the head, so the face keeps its shape
       ext = clamp(Math.hypot(dx, dy) - NOSE, -3, 5) * this.sn;
     }
-    ext += 4 * this.air;
+    ext += 2 * this.air;
     const w = 9.5;
     this.thV += (w * w * (target - this.th) - 2 * w * this.thV) * dt;
     this.th += this.thV * dt;
@@ -178,7 +181,8 @@ class Bear {
     this.root.setAttribute("opacity", f1(this.fade));
     this.root.setAttribute("transform", "translate(0 " + f1(this.bearY) + ")");
     if (stage) {
-      stage.word.setAttribute("transform", "translate(0 " + f1(this.wordY) + ")");
+      stage.m.setAttribute("transform", "translate(0 " + f1(this.wordY) + ")");
+      stage.a.setAttribute("transform", "translate(0 " + f1(this.aY) + ")");
       stage.films.setAttribute("opacity", this.films.toFixed(2));
     }
   }
@@ -264,18 +268,23 @@ function makeSkin(svg, d, ox, oy, count) {
   return { n, K, idx, lx, ly, w };
 }
 
-/* ---------- The wordmark: "Amble" starts in the ground and rises ---------- */
+/* ---------- The wordmark: "ble" is there from the start; the "m" and then the "A" rise out of the ground ---------- */
 function makeStage(group) {
   const svg = group.ownerSVGElement, kids = Array.from(group.children);
   if (!svg || kids.length < 9) return null;                 // expects the four "Amble" shapes, then the five "FILMS" letters
   const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
   const defs = svg.querySelector("defs") || svg.insertBefore(document.createElementNS(NS, "defs"), svg.firstChild);
-  const clip = mk("clipPath", { id: "amble-ground" }, defs);
-  mk("rect", { x: -600, y: -300, width: 2000, height: 556 }, clip);       // everything above the ground line (y = 256)
-  const outer = mk("g", { "clip-path": "url(#amble-ground)" }, group), word = mk("g", {}, outer), films = mk("g", {}, group);
-  kids.slice(0, 4).forEach(k => word.appendChild(k));
+  /* In the logo file the "A" and the "m" are one joined shape. It is shown twice, each copy cut to one
+     letter (they meet at x = 209) and to the ground line (y = 256), so each letter can rise on its own. */
+  const SPLIT = 209, am = kids[3];
+  mk("rect", { x: -600, y: -300, width: SPLIT + 600, height: 556 }, mk("clipPath", { id: "amble-cut-a" }, defs));
+  mk("rect", { x: SPLIT, y: -300, width: 1400, height: 556 }, mk("clipPath", { id: "amble-cut-m" }, defs));
+  const a = mk("g", {}, mk("g", { "clip-path": "url(#amble-cut-a)" }, group));
+  const m = mk("g", {}, mk("g", { "clip-path": "url(#amble-cut-m)" }, group));
+  const films = mk("g", {}, group);
+  m.appendChild(am.cloneNode(true)); a.appendChild(am);
   kids.slice(4).forEach(k => films.appendChild(k));
-  return { word, films };
+  return { a, m, films };
 }
 
 /* ---------- Start it on the page ---------- */
