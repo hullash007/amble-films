@@ -37,7 +37,7 @@ const PLUMP = 2.5;                   // how much the outline is filled out for a
 
 /* ---------- Timing of the entrance ---------- */
 const T_SNIFF = 0.9, TR0 = 2.5, TR1 = 4.8, T_INTRO = 7.6;
-const IDLE = ["ground", "air", "shift", "paw", "low", "ground", "air"];
+const IDLE = ["ground", "air", "shift", "low", "ground", "air"];   // no leg movements: the legs always keep their logo shape
 
 class Bear {
   constructor(root, o) {
@@ -66,7 +66,7 @@ class Bear {
       r.wordY = SINK * (1 - smooth((t - TR0) / (TR1 - TR0)));
       r.bearY = Math.min(r.wordY, LIFT);
       r.dip = smooth((LIFT - r.wordY) / 16) * (1 - smooth((t - (TR1 - 0.5)) / 0.5));   // braces as the ground moves
-      r.look = 0.5;
+      r.look = 0.4;
     } else if (t < TR1 + 1.7) {
       r.sniff = 1;                                             // sniffs the letters underfoot
     } else if (t < T_INTRO) {
@@ -76,7 +76,7 @@ class Bear {
       if (x >= 1) { this.idle = null; this.nextIdle = t + rnd(3.5, 8); }
       else if (this.idle.type === "ground") { if (x < 0.8) r.sniff = 1; }
       else if (this.idle.type === "air") { if (x < 0.8) { r.look = -0.22; r.air = 1; } }
-      else if (this.idle.type === "low") { if (x < 0.8) r.look = 0.5; }
+      else if (this.idle.type === "low") { if (x < 0.8) r.look = 0.4; }
       else if (this.idle.type === "shift") r.lean = 7 * env * Math.sin(x * TAU);
       else if (this.idle.type === "paw") r.paw = env;
     } else if (t > this.nextIdle) {
@@ -107,19 +107,19 @@ class Bear {
 
     /* Body: hips and shoulders, shifted by leaning, bracing and sniffing */
     const Hx = X + this.lean, Hy = GY - HIP + 7 * this.dip;
-    const sx0 = X + L + this.lean, sy0 = GY - SHO + 10 * this.sn + 5 * this.dip;
+    const sx0 = X + L + this.lean, sy0 = GY - SHO + 6 * this.sn + 5 * this.dip;
     const ang = Math.atan2(sy0 - Hy, sx0 - Hx), ca = Math.cos(ang), sa = Math.sin(ang);
     const Sx = Hx + ca * L, Sy = Hy + sa * L;
     const loc = (x, y) => [Hx + x * ca - y * sa, Hy + x * sa + y * ca];
 
     /* Head */
-    const N = loc(NECK[0] + 6 * this.sn, NECK[1] + 13 * this.sn);
+    const N = loc(NECK[0] + 5 * this.sn, NECK[1] + 7 * this.sn);
     let target = ang * 0.8 + 0.23, ext = 0;
     if (sc.look !== null) target = sc.look;
     if (this.sn > 0.02) {
       const dx = Sx + 66 - N[0], dy = GY - 8 - N[1];          // nose reaches down and forward, clear of the front legs
-      target = lerp(target, clamp(Math.atan2(dy, dx) - 0.16, -0.9, 0.85), smooth(this.sn));
-      ext = clamp(Math.hypot(dx, dy) - NOSE, -3, 8) * this.sn;
+      target = lerp(target, clamp(Math.atan2(dy, dx) - 0.16, -0.9, 0.6), smooth(this.sn));   // a gentle dip of the head, so the face keeps its shape
+      ext = clamp(Math.hypot(dx, dy) - NOSE, -3, 5) * this.sn;
     }
     ext += 4 * this.air;
     const w = 9.5;
