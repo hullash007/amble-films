@@ -3,8 +3,10 @@
    moved by a small skeleton (body, head, four two-part legs and paws), so it
    bends as one continuous shape.
 
-   The bear does not walk: its four paws stay planted, which keeps its legs in
-   their natural logo shape. On load it stands on the ground, the word "Amble"
+   Its paws stay planted most of the time, which keeps its legs in their natural
+   logo shape. Now and then it takes a few small steps along the letter and back,
+   one paw at a time, so its legs never pass each other.
+   On load it stands on the ground, the word "Amble"
    rises up underneath it and lifts it into the logo position. From then on it
    is never still: it works through a long, shuffled round of activities
    (sniffing along the letters, scenting the air, watching the distance,
@@ -57,11 +59,18 @@ const ACTS = {
   doze:    [8, 12],     // head sinks, slow heavy breathing, then a small start awake
   peer:    [4.5, 6.5],  // leans out and looks down over the front of the letter
   shuffle: [3, 4.5],    // shifts its weight from paw to paw
-  sit:     [9, 13]      // lowers its haunches, sits and looks about, then stands again
+  sit:     [9, 13],     // lowers its haunches, sits and looks about, then stands again
+  pace:    [0, 0]       // a few steps forward along the letter, a look about, and back (it keeps its own time, see below)
 };
 /* One round. It is shuffled before every pass, and no activity follows itself. */
-const ROUND = ["ground", "air", "sway", "survey", "sit", "ground", "stretch", "alert", "peer", "sigh",
-               "air", "shuffle", "doze", "survey", "ground", "sway", "air", "alert", "peer", "shuffle"];
+const ROUND = ["ground", "air", "pace", "survey", "sit", "ground", "stretch", "alert", "pace", "sigh", "peer",
+               "air", "shuffle", "doze", "survey", "pace", "ground", "sway", "air", "alert", "peer", "shuffle"];
+
+/* ---------- The few steps it takes along the letter ---------- */
+const STEP = 12;              // how far each paw steps (kept short, so its nose stays clear of the "b")
+const PACES = 2;              // how many times all four paws step on the way out (and again on the way back)
+const PACE_TIME = 1.7;        // seconds for all four paws to step once
+const TURN = [1, 3, 0, 2];    // which quarter of that time each paw steps in: the rear front paw first, then the rear hind paw, then the other two
 function newRound(last) {
   for (let tries = 0; tries < 80; tries++) {
     const r = ROUND.slice();
@@ -84,6 +93,8 @@ class Bear {
     this.lean = 0; this.dip = 0; this.paw = 0; this.fade = 0;
     this.reach = 0; this.swell = 0; this.deep = 0; this.sit = 0; this.bph = 0;
     this.act = null; this.queue = []; this.nextAct = T_INTRO + 0.6; this.lastAct = "air";
+    this.ox = 0;                                                             // how far along the letter it has stepped
+    this.legs = LEGS.map(l => ({ at: l.at, up: 0, pitch: 0 }));              // where each paw is, how high it is lifted and how it is tilted
     this.sk = null; this.breath = 1;
     this.wordY = 0; this.aY = 0; this.bearY = 0; this.films = 1;
   }
@@ -110,7 +121,8 @@ class Bear {
       if (!this.act && t >= this.nextAct) this.begin();
       if (this.act) {
         const a = this.act, x = (t - a.t0) / a.dur;
-        if (x < 1) this.perform(a, x, t, r);
+        if (a.type === "pace") { if (this.pace(a, t - a.t0, r)) { this.act = null; this.nextAct = t + rnd(0.7, 2.2); } }
+        else if (x < 1) this.perform(a, x, t, r);
         else {
           if ((a.type === "doze" && Math.random() < 0.75) || (a.type === "stretch" && Math.random() < 0.35)) this.queue.unshift("shake");
           this.act = null; this.nextAct = t + rnd(0.7, 2.2);
@@ -124,11 +136,12 @@ class Bear {
     if (!type && !this.queue.length) this.queue = newRound(this.lastAct);
     const name = type || this.queue.shift(), d = ACTS[name];
     this.lastAct = name;
-    this.act = { type: name, t0: this.t, dur: rnd(d[0], d[1]), a: Math.random(), b: Math.random() };   // a and b make each performance a little different
+    this.act = { type: name, t0: this.t, dur: rnd(d[0], d[1]), a: Math.random(), b: Math.random(),     // a and b make each performance a little different
+                 pause: rnd(2.4, 4.2) };                                                                // how long it stops at the far end of its few steps
   }
   /* Something caught its attention (the pointer came near): it looks up and listens */
   notice() {
-    if (this.t > T_INTRO && !(this.act && (this.act.type === "alert" || this.act.type === "sit"))) this.begin("alert");
+    if (this.t > T_INTRO && !(this.act && (this.act.type === "alert" || this.act.type === "sit" || this.act.type === "pace"))) this.begin("alert");
   }
   /* What each activity asks of the body at the point x (0 to 1) through it */
   perform(a, x, t, r) {
@@ -182,6 +195,35 @@ class Bear {
     }
   }
 
+  /* A few steps forward along the letter, a look about, and the same steps back to where it stood.
+     e is the time since it set off, in seconds. Returns true when it is home. */
+  pace(a, e, r) {
+    const walk = PACES * PACE_TIME, t1 = walk, t2 = t1 + a.pause, t3 = t2 + walk;
+    const ease = x => x - 0.25 * Math.sin(TAU * x) / TAU;                    // a little slower into the first step and out of the last
+    if (e < t1) this.tread(PACES * ease(e / walk), r);
+    else if (e < t2) {
+      this.tread(PACES, r);
+      const x = (e - t1) / a.pause;
+      if (x > 0.1 && x < 0.85) { r.look = 0.07 - 0.08 * a.a * Math.sin(x * Math.PI); r.air = a.b < 0.5 ? 1 : 0; }   // head up: it looks ahead, and sometimes scents the air
+    }
+    else if (e < t3) this.tread(PACES * ease(1 - (e - t2) / walk), r);         // the same steps, taken backwards
+    else { this.tread(0, r); return true; }
+    return false;
+  }
+  /* Places the paws when the bear is g rounds of steps along (g may be a fraction) and moves the body with them.
+     The paws step one at a time. A paw on the ground stays exactly where it was put down while the body moves
+     over it, so nothing slides, and the rear paw of each pair never reaches the front one, so the legs never cross. */
+  tread(g, r) {
+    const u = g - Math.floor(g);
+    this.ox = STEP * g;
+    this.legs.forEach((foot, i) => {
+      const q = clamp(u * 4 - TURN[i], 0, 1), s = Math.sin(Math.PI * q), lift = s * s;
+      foot.at = LEGS[i].at + STEP * (smooth(q) - u); foot.up = 8 * lift; foot.pitch = 0.2 * lift;
+    });
+    const beat = Math.sin(Math.PI * (u * 4 - Math.floor(u * 4)));
+    if (u > 0) { r.dip = 0.14 * beat * beat; r.wob = 0.02 * Math.sin(TAU * u * 4); }                 // the body dips and the head nods a little with each step
+  }
+
   step(dt) {
     if (!(dt > 0.0005)) return;
     this.t += dt;
@@ -229,9 +271,10 @@ class Bear {
     LEGS.forEach((leg, i) => {
       const jx = leg.front ? Sx : Hx, jy = leg.front ? Sy : Hy;
       const len = leg.front ? LEN.front : LEN.hind, l1 = len[0], l2 = len[1];
-      const up = i === 3 ? 13 * this.paw : 0, pitch = i === 3 ? 0.45 * this.paw : 0;      // the front paw that lifts now and then
+      const foot = this.legs[i];                                                          // where this paw is in its step, when the bear is stepping
+      const up = foot.up + (i === 3 ? 13 * this.paw : 0), pitch = foot.pitch + (i === 3 ? 0.45 * this.paw : 0);
       const tx = Math.cos(pitch), ty = Math.sin(pitch);
-      const fx = (leg.front ? X + L : X) + leg.at, fy = GY - up;
+      const fx = (leg.front ? X + L : X) + foot.at, fy = GY - up;
       const tax = fx + ty * 10 - tx, tay = fy - tx * 10 - ty;
       const dx = tax - jx, dy = tay - jy, d0 = Math.hypot(dx, dy) || 1;
       const d = clamp(d0, 14, l1 + l2 - 0.4), ux = dx / d0, uy = dy / d0;
@@ -273,7 +316,7 @@ class Bear {
     }
     this.path.setAttribute("d", d + "Z");
     this.root.setAttribute("opacity", f1(this.fade));
-    this.root.setAttribute("transform", "translate(0 " + f1(this.bearY) + ")");
+    this.root.setAttribute("transform", "translate(" + f1(this.ox) + " " + f1(this.bearY) + ")");
     if (stage) {
       stage.m.setAttribute("transform", "translate(0 " + f1(this.wordY) + ")");
       stage.a.setAttribute("transform", "translate(0 " + f1(this.aY) + ")");
