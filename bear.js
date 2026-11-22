@@ -318,6 +318,7 @@ if (rig && art) {
   const skin = makeSkin(rig.ownerSVGElement, art.getAttribute("d"), m ? +m[1] : 0, m ? +m[2] : 0);
   const still = document.getElementById("bear-static");
   if (still) still.style.display = "none";
+  document.querySelectorAll(".bear-still").forEach(u => { u.style.display = "none"; });   // the menu and footer logos mirror the living bear instead
   const bear = mount(rig, skin, letters ? makeStage(letters) : null);
   const logo = rig.closest(".logo");
   if (logo) logo.addEventListener("pointerenter", () => bear.startIdle(Math.random() < 0.5 ? "ground" : "air"));
