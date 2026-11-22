@@ -1,0 +1,14 @@
+# Read by Cloudflare Pages and Netlify. Other hosts ignore this file.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Films and their pictures are kept by the browser for a week.
+# If you replace a film, give the new file a new name so visitors see it straight away.
+/videos/*
+  Cache-Control: public, max-age=604800
+
+/posters/*
+  Cache-Control: public, max-age=604800
