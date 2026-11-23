@@ -6,9 +6,8 @@
    Its paws stay planted most of the time, which keeps its legs in their natural
    logo shape. Now and then it takes a few small steps along the letter and back,
    one paw at a time, so its legs never pass each other.
-   On load it stands on the ground, the word "Amble"
-   rises up underneath it and lifts it into the logo position. From then on it
-   is never still: it works through a long, shuffled round of activities
+   The logo is whole from the first frame and the bear starts already standing on
+   the word. It is never still: it works through a long, shuffled round of activities
    (sniffing along the letters, scenting the air, watching the distance,
    stretching, sitting, dozing, shaking out its coat and more). A round lasts
    about two and a half minutes and is ordered and timed afresh each time, so
@@ -327,6 +326,11 @@ class Bear {
   advance(seconds) { for (let i = 0, n = Math.round(seconds * 60); i < n; i++) this.step(1 / 60); }
 }
 
+/* The bear's outline, traced once from the logo and filled out (see plump). Tracing it in the browser is slow on
+   phones, so it is kept here. If the logo artwork ever changes, these numbers no longer match its length and the
+   outline is traced afresh. */
+const OUTLINE = { length: 4094, points: [[344.18,21.77],[346.19,22.6],[348.15,23.45],[350.09,24.27],[352.03,25.04],[353.95,25.79],[355.85,26.51],[357.71,27.19],[359.52,27.77],[361.31,28.19],[363.14,28.33],[365.03,28.02],[366.98,27.47],[369.02,27.03],[371.18,27.06],[373.4,27.35],[375.64,27.66],[377.9,27.89],[380.23,28.16],[382.64,28.77],[384.93,29.95],[386.65,31.73],[387.49,33.88],[387.7,36.08],[387.89,38.1],[388.51,39.81],[389.58,41.23],[390.9,42.53],[392.4,43.89],[393.96,45.43],[395.43,47.13],[396.62,49],[397.51,50.97],[398.28,52.9],[399.15,54.67],[400.23,56.21],[401.51,57.57],[403.03,58.88],[404.78,60.27],[406.71,61.8],[408.06,63.7],[408.52,66.02],[407.99,68.63],[406.99,71.05],[405.66,73.07],[404.07,74.77],[402.39,76.41],[400.71,78.09],[398.9,79.6],[396.83,80.73],[394.52,81.36],[392.16,81.58],[389.87,81.55],[387.7,81.47],[385.63,81.43],[383.63,81.49],[381.65,81.66],[379.66,81.99],[377.64,82.44],[375.59,82.92],[373.48,83.32],[371.32,83.57],[369.15,83.73],[367,83.83],[364.9,83.92],[363,83.97],[361.3,83.93],[359.97,83.88],[359.31,84.32],[359.23,85.32],[359.5,86.86],[359.65,88.58],[359.81,90.46],[360.09,92.39],[360.54,94.27],[361.16,96.09],[361.92,97.87],[362.81,99.62],[363.8,101.35],[364.87,103.06],[366.01,104.77],[367.18,106.48],[368.37,108.22],[369.57,109.97],[370.76,111.75],[371.9,113.54],[372.93,115.31],[373.83,117.02],[374.71,118.59],[375.82,119.86],[377.29,120.67],[379.12,121.08],[381.17,121.46],[383.33,122.24],[385.47,123.56],[387.27,125.53],[388.43,128.02],[388.71,130.81],[388,133.49],[386.37,135.63],[384.14,137.05],[381.69,137.83],[379.28,138.2],[376.98,138.34],[374.77,138.36],[372.59,138.37],[370.42,138.37],[368.23,138.35],[366,138.24],[363.73,137.96],[361.43,137.44],[359.18,136.64],[357.08,135.55],[355.29,134.16],[353.74,132.59],[352.3,131.02],[350.8,129.64],[349.21,128.46],[347.55,127.4],[345.79,126.4],[343.98,125.39],[342.15,124.34],[340.32,123.24],[338.49,122.09],[336.69,120.9],[334.91,119.65],[333.17,118.35],[331.58,117.07],[330.22,115.83],[329.16,114.6],[328.29,114.05],[327.5,114.29],[326.65,115.36],[325.64,116.63],[324.53,118.04],[323.46,119.5],[322.53,120.83],[321.67,121.99],[321.56,122.67],[322.27,123.06],[323.92,123.32],[325.82,124.09],[327.72,125.5],[329.26,127.65],[329.99,130.34],[329.79,133.27],[328.51,135.66],[326.45,137.24],[323.9,137.95],[321.43,138.23],[319.1,138.3],[316.88,138.31],[314.69,138.31],[312.47,138.28],[310.22,138.11],[307.94,137.74],[305.65,137.1],[303.4,136.14],[301.27,134.8],[299.39,133.07],[297.99,130.94],[297.21,128.59],[297.04,126.17],[297.19,123.83],[297.42,121.61],[297.59,119.49],[297.71,117.43],[297.78,115.36],[297.8,113.27],[297.81,111.14],[297.84,109.02],[297.97,107.06],[298.27,105.35],[298.77,104.05],[298.81,103.61],[298.24,103.8],[296.87,104.43],[295.19,104.91],[293.29,105.36],[291.29,105.82],[289.41,106.23],[287.66,106.63],[286.1,107.12],[284.98,108.05],[284.28,109.39],[283.91,111.05],[283.5,112.82],[283.09,114.67],[282.75,116.47],[282.5,118.14],[282.4,119.61],[282.92,120.69],[284.05,121.46],[285.73,122.04],[287.6,122.89],[289.62,124.07],[291.63,125.68],[293.04,127.84],[293.61,130.47],[293.25,133.37],[291.94,135.73],[289.9,137.29],[287.35,138],[284.88,138.31],[282.55,138.38],[280.37,138.35],[278.23,138.3],[276.13,138.29],[274.03,138.31],[271.93,138.33],[269.79,138.35],[267.58,138.36],[265.31,138.29],[263,138.02],[260.67,137.39],[258.38,136.36],[256.3,134.9],[254.64,133.02],[253.52,130.84],[252.89,128.55],[252.56,126.33],[252.29,124.24],[251.89,122.3],[251.28,120.49],[250.49,118.8],[249.55,117.2],[248.57,115.73],[247.59,114.43],[246.61,113.31],[245.58,112.87],[244.48,113.16],[243.27,114.1],[241.85,115.18],[240.24,116.3],[238.49,117.47],[236.72,118.62],[235.01,119.7],[233.37,120.68],[231.91,121.52],[230.78,122.25],[230.28,122.68],[230.74,122.81],[232,122.85],[233.84,123.31],[235.79,124.48],[237.59,126.33],[238.68,128.8],[238.87,131.6],[238.07,134.34],[236.44,136.39],[234.18,137.6],[231.65,138.08],[229.23,138.25],[226.93,138.3],[224.69,138.31],[222.45,138.26],[220.18,138.04],[217.89,137.59],[215.61,136.84],[213.41,135.8],[211.46,134.42],[209.79,132.74],[208.4,130.82],[207.13,128.85],[205.96,126.83],[204.95,124.75],[204.19,122.51],[203.74,120.14],[203.62,117.7],[203.92,115.32],[204.58,113.07],[205.52,110.96],[206.54,108.98],[207.55,107.07],[208.52,105.21],[209.43,103.35],[210.29,101.49],[211.12,99.6],[211.91,97.7],[212.67,95.79],[213.39,93.86],[214.08,91.91],[214.75,89.95],[215.38,87.98],[216,86.01],[216.6,84.05],[217.15,82.09],[217.64,80.11],[218.03,78.12],[218.35,76.09],[218.62,74.01],[218.89,71.88],[219.25,69.74],[219.75,67.59],[220.38,65.45],[221.13,63.35],[221.99,61.29],[222.96,59.29],[224.01,57.35],[225.15,55.46],[226.36,53.62],[227.63,51.84],[228.97,50.11],[230.36,48.43],[231.79,46.79],[233.27,45.21],[234.8,43.66],[236.35,42.16],[237.95,40.7],[239.58,39.26],[241.25,37.86],[242.98,36.51],[244.78,35.24],[246.65,34.06],[248.57,32.97],[250.55,31.96],[252.56,31.04],[254.62,30.22],[256.72,29.5],[258.86,28.9],[261.02,28.4],[263.2,28],[265.38,27.71],[267.57,27.51],[269.74,27.4],[271.91,27.36],[274.07,27.36],[276.22,27.39],[278.36,27.46],[280.51,27.57],[282.65,27.71],[284.78,27.9],[286.91,28.12],[289.02,28.38],[291.11,28.66],[293.17,28.96],[295.2,29.24],[297.21,29.43],[299.2,29.52],[301.18,29.5],[303.15,29.37],[305.11,29.13],[307.06,28.79],[308.99,28.34],[310.91,27.81],[312.81,27.18],[314.69,26.48],[316.56,25.69],[318.42,24.83],[320.3,23.9],[322.21,22.94],[324.19,22.02],[326.27,21.19],[328.45,20.5],[330.7,20.01],[333.01,19.75],[335.34,19.74],[337.65,19.97],[339.91,20.41],[342.09,21.02]] };
+
 /* ---------- Fitting the logo outline to the skeleton ---------- */
 function segDist(px, py, ax, ay, bx, by) {
   const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy || 1;
@@ -356,11 +360,18 @@ function makeSkin(svg, d, ox, oy, count) {
   const tmp = document.createElementNS(NS, "path");
   tmp.setAttribute("d", end > 0 ? d.slice(0, end + 1) : d);
   svg.appendChild(tmp);
-  const total = tmp.getTotalLength(), n = count || 440;
-  let P = [];
-  for (let i = 0; i < n; i++) { const q = tmp.getPointAtLength(total * i / n); P.push([q.x + ox, q.y + oy]); }
+  const n = count || 360, KEY = "amble-bear-outline-" + n + "-" + d.length;
+  let P = null;
+  if (d.length === OUTLINE.length && OUTLINE.points.length === n) P = OUTLINE.points;
+  else try { const c = JSON.parse(localStorage.getItem(KEY)); if (Array.isArray(c) && c.length === n) P = c; } catch (e) {}   // traced once, then kept by the browser
+  if (!P) {
+    const total = tmp.getTotalLength();
+    P = [];
+    for (let i = 0; i < n; i++) { const q = tmp.getPointAtLength(total * i / n); P.push([q.x + ox, q.y + oy]); }
+    if (PLUMP) P = plump(P, PLUMP);
+    try { localStorage.setItem(KEY, JSON.stringify(P.map(p => [Math.round(p[0] * 100) / 100, Math.round(p[1] * 100) / 100]))); } catch (e) {}
+  }
   svg.removeChild(tmp);
-  if (PLUMP) P = plump(P, PLUMP);
 
   /* 2. The skeleton in its standing pose, which matches the logo */
   const probe = new Bear(null, { probe: true });
@@ -427,26 +438,30 @@ function makeStage(group) {
 /* ---------- Start it on the page ---------- */
 function mount(root, skin, stage) {
   const bear = new Bear(root, { skin });
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    bear.advance(T_INTRO + 0.5); bear.render(stage);
-    return bear;
-  }
-  let last = 0;
+  /* The wordmark is whole from the very first frame: the entrance is skipped and the bear
+     starts already standing on the letters, going about its routine. */
+  bear.t = T_INTRO; bear.advance(0.5); bear.render(stage);
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return bear;
+  let last = 0, lastFrame = 0, idleSince = performance.now();
+  const wake = () => { idleSince = performance.now(); };
+  ["pointermove", "pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, wake, { passive: true }));
   function tick(now) {
     requestAnimationFrame(tick);
-    if (document.hidden) { last = 0; return; }
-    const dt = last ? Math.min((now - last) / 1000, 0.05) : 1 / 60;
-    if (dt < 0.002) return;
+    if (document.hidden || now - idleSince > 60000) { last = 0; return; }   // it rests while the tab is hidden or nobody has moved for a minute
+    if (now - lastFrame < 32) return;                                       // about 30 frames a second, plenty for a small logo
+    lastFrame = now;
+    const dt = last ? Math.min((now - last) / 1000, 0.05) : 1 / 30;
     last = now;
     bear.step(dt); bear.render(stage);
   }
-  bear.step(1 / 60); bear.render(stage);
   requestAnimationFrame(tick);
   return bear;
 }
 
 window.AmbleBear = { Bear, mount, makeSkin, makeStage, T_INTRO };
 
+/* The still logo shows until the page has settled; only then is the bear built and set moving. */
+function start() {
 const rig = document.getElementById("bear-rig");
 const art = document.querySelector("#amble-bear-art path");
 const letters = document.getElementById("amble-letters");
@@ -459,4 +474,7 @@ if (rig && art) {
   const logo = rig.closest(".logo");
   if (logo) logo.addEventListener("pointerenter", () => bear.notice());
 }
+}
+const later = () => ("requestIdleCallback" in window) ? requestIdleCallback(start, { timeout: 2500 }) : setTimeout(start, 300);
+if (document.readyState === "complete") later(); else addEventListener("load", later, { once: true });
 })();

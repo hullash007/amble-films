@@ -1,14 +1,26 @@
-# Read by Cloudflare Pages and Netlify. Other hosts ignore this file.
+# Read by Netlify. Other hosts ignore this file.
 
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
 
-# Films and their pictures are kept by the browser for a week.
-# If you replace a film, give the new file a new name so visitors see it straight away.
-/videos/*
+# Fonts never change, so they are kept for a year.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The stylesheet, script and bear carry a ?v= number in every page. Raise it when you change the file.
+/assets/site.css
+  Cache-Control: public, max-age=604800
+/assets/site.js
+  Cache-Control: public, max-age=604800
+/bear.js
   Cache-Control: public, max-age=604800
 
-/posters/*
+# Films and pictures are kept for a week.
+# If you replace one, give the new file a new name so visitors see it straight away.
+/videos/*
+  Cache-Control: public, max-age=604800
+/assets/img/*
   Cache-Control: public, max-age=604800
