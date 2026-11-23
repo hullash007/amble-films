@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hullash007.github.io/amble-films/sitemap.xml
+Sitemap: https://amblefilms.in/sitemap.xml
