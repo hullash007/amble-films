@@ -3,7 +3,7 @@
    preview hosts (see themeBoot in tools/lib.mjs). amblefilms.in never loads this file.
    Share a theme with ?theme=original-black | warm-dark | light-cream. The choice is kept while you browse. */
 (function () {
-  var THEMES = [["original-black", "Original Black"], ["warm-dark", "Deep Warm Cream"], ["light-cream", "Light Cream"]];
+  var THEMES = [["one-cream", "One Cream"], ["original-black", "Original Black"], ["warm-dark", "Deep Warm Cream"], ["light-cream", "Light Cream"]];
   var root = document.documentElement;
   var current = function () { return root.getAttribute("data-theme"); };
 

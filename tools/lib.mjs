@@ -20,8 +20,8 @@ const TODAY = new Date().toISOString().slice(0, 10);
    The theme switcher exists only on preview hosts (localhost and Netlify previews such as
    deploy-preview-2--amble-films.netlify.app); on amblefilms.in the ?theme= parameter is ignored
    and the switcher script is never loaded. Set PREVIEW_THEMES to false to remove it completely. */
-const THEMES = ["original-black", "warm-dark", "light-cream"];
-const DEFAULT_THEME = "original-black";
+const THEMES = ["one-cream", "original-black", "warm-dark", "light-cream"];
+const DEFAULT_THEME = "one-cream";
 const PREVIEW_THEMES = true;
 const themeBoot = `(function(){var T=${JSON.stringify(THEMES)},t="${DEFAULT_THEME}",h=location.hostname,d=document.documentElement;
 var p=${PREVIEW_THEMES}&&(/^(localhost|127\\.0\\.0\\.1)$/.test(h)||/--amble-films\\.netlify\\.app$/.test(h));

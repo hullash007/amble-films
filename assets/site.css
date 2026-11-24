@@ -49,6 +49,18 @@
   --inv-btn-bg:#EFE7DA; --inv-btn-fg:#1E1A17; --inv-btn-hover:#FAF6EF;
   --logo-inv:invert(1) sepia(.35) saturate(.6) brightness(.95); --logo-inv-opacity:1;
 }
+/* one-cream: a single paper colour everywhere. Black is kept only for buttons and type. Sections are divided by fine lines. */
+[data-theme="one-cream"]{
+  --paper-2:#F5F1EA; --card:#F5F1EA;
+  --night:#F5F1EA; --night-2:#F5F1EA; --night-cta:#F5F1EA; --night-foot:#F5F1EA; --dark-edge:#DAD1C2;
+  --on-dark:#15130F; --on-dark-2:#5F584D; --line-dark:#DAD1C2;
+  --inv-btn-bg:#15130F; --inv-btn-fg:#F5F1EA; --inv-btn-hover:#2A2620;
+  --logo-inv:none; --logo-inv-opacity:1;
+}
+[data-theme="one-cream"] .section.dark,[data-theme="one-cream"] .cta-band{box-shadow:none}
+[data-theme="one-cream"] main>*+section:not(.tight-top):not(.statement),[data-theme="one-cream"] main>*+.cta-band{box-shadow:inset 0 1px var(--line)}
+[data-theme="one-cream"] .dark .points li{border-color:var(--line-strong)}
+[data-theme="one-cream"] .unsure{border:1px solid var(--line)}
 [data-theme="light-cream"]{
   --night:#E6DDCE; --night-2:#DDD3C2; --night-cta:#FBF8F2; --night-foot:#E9E1D3; --dark-edge:#D3C7B3;
   --on-dark:#15130F; --on-dark-2:#5A5247; --line-dark:rgba(21,19,15,.15);
