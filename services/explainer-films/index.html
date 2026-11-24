@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="original-black">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,11 +8,15 @@
 <meta name="theme-color" content="#F5F1EA">
 <script>
 if (location.hostname === 'hullash007.github.io') location.replace('https://amblefilms.in' + location.pathname.replace(/^\/amble-films/, '') + location.search + location.hash);
-document.documentElement.classList.add('js');
+(function(){var T=["original-black","warm-dark","light-cream"],t="original-black",h=location.hostname,d=document.documentElement;
+var p=true&&(/^(localhost|127\.0\.0\.1)$/.test(h)||/--amble-films\.netlify\.app$/.test(h));
+if(p){try{var q=new URLSearchParams(location.search).get("theme");if(T.indexOf(q)>-1){localStorage.setItem("amble-theme",q);t=q}else{var s=localStorage.getItem("amble-theme");if(T.indexOf(s)>-1)t=s}}catch(e){}d.setAttribute("data-preview","")}
+d.setAttribute("data-theme",t);d.classList.add("js")})();
 </script>
 <link rel="canonical" href="https://amblefilms.in/services/explainer-films/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Amble Films">
+<meta property="og:locale" content="en_IN">
 <meta property="og:url" content="https://amblefilms.in/services/explainer-films/">
 <meta property="og:title" content="Explainer films that make the complex clear | Amble Films">
 <meta property="og:description" content="Explainer films for products, services and processes: script, storyboard, voice-over and finished film.">
@@ -30,7 +34,7 @@ document.documentElement.classList.add('js');
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/hanken-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=4">
+<link rel="stylesheet" href="/assets/site.css?v=5">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Explainer Films","serviceType":"Explainer Films","description":"Explainer films for products, services and processes: script, storyboard, voice-over and finished film.","url":"https://amblefilms.in/services/explainer-films/","provider":{"@type":"Organization","name":"Amble Films","url":"https://amblefilms.in/"},"areaServed":"Worldwide"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://amblefilms.in/"},{"@type":"ListItem","position":2,"name":"Services","item":"https://amblefilms.in/services/"},{"@type":"ListItem","position":3,"name":"Explainer Films","item":"https://amblefilms.in/services/explainer-films/"}]}</script>
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
@@ -62,7 +66,7 @@ document.documentElement.classList.add('js');
     </nav>
     <div class="bar-end">
       <a class="btn small nav-cta" href="/contact/">Start a project</a>
-      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span>Menu</span></button>
+      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span class="menu-word">Menu</span></button>
     </div>
   </div>
 </header>
@@ -76,7 +80,7 @@ document.documentElement.classList.add('js');
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="/work/">Work</a></li>
-      <li><details open><summary>Services</summary><ul class="menu-sub"><li><a href="/services/brand-films/">Brand Films</a></li><li><a href="/services/product-films/">Product Films</a></li><li><a href="/services/advertising-films/">Advertising Films</a></li><li><a href="/services/explainer-films/">Explainer Films</a></li><li><a href="/services/educational-films/">Educational Films</a></li><li><a href="/services/launch-campaign-films/">Launch Films &amp; Campaign Content</a></li><li><a href="/services/ongoing-content/">Ongoing Video Production</a></li><li><a href="/services/">All services</a></li></ul></details></li>
+      <li><details open><summary>Services</summary><ul class="menu-sub"><li><a href="/services/brand-films/">Brand Films</a></li><li><a href="/services/product-films/">Product Films</a></li><li><a href="/services/advertising-films/">Advertising Films</a></li><li><a href="/services/explainer-films/" aria-current="page">Explainer Films</a></li><li><a href="/services/educational-films/">Educational Films</a></li><li><a href="/services/launch-campaign-films/">Launch Films &amp; Campaign Content</a></li><li><a href="/services/ongoing-content/">Ongoing Video Production</a></li><li><a href="/services/">All services</a></li></ul></details></li>
       <li><a href="/industries/">Industries</a></li>
       <li><a href="/studio/">Studio</a></li>
       <li><a href="/process/">Process</a></li>
@@ -94,9 +98,15 @@ document.documentElement.classList.add('js');
     <p class="eyebrow">Explainer Films</p>
     <h1 class="h1">Make the complex clear.</h1>
     <p class="lead">Some ideas are hard to picture: how a service works, what happens inside a system, why a process matters. Explainer films show them, so audiences understand in minutes rather than pages.</p>
-    <div class="actions"><a class="btn" href="/contact/?need=Explainer%20film">Start a project</a><a class="link-arrow" href="#examples">See related films <span class="arr" aria-hidden="true">→</span></a></div>
+    <div class="actions"><a class="btn" href="/contact/?need=Explainer%20film">Start a project</a><a class="link-arrow" href="#featured">Watch a related film <span class="arr" aria-hidden="true">→</span></a></div>
   </div>
 </section>
+<section class="section tight-top hero-visual" id="featured" aria-label="Featured film"><div class="wrap-wide svc-visual"><article class="film film-hero" data-film="latitudes" data-cat="education" data-kind="client">
+    <button class="film-media" type="button" data-play aria-label="Play Latitudes, 4:20">
+      <img src="/assets/img/latitudes-800.jpg" srcset="/assets/img/latitudes-800.jpg 800w, /assets/img/latitudes-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="A teacher and a student beside a glowing globe marked with coordinates" fetchpriority="high" decoding="async">
+      <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
+      <span class="hero-film-cap"><b>Latitudes</b> Client film · 4:20</span>
+    </button></article></div></section>
 <section class="section tight-top" aria-label="What is included">
   <div class="wrap detail-grid">
     <div class="detail-col"><h2 class="label">What you receive</h2><ul class="ticks"><li>Narrative structure and script</li><li>Visual metaphors and storyboard</li><li>Voice-over casting and direction</li><li>A finished film, with motion graphics where they help</li><li>Captions and translated versions</li></ul></div>
@@ -107,36 +117,26 @@ document.documentElement.classList.add('js');
 <section class="section alt" aria-labelledby="approach-title">
   <div class="wrap approach">
     <div><p class="eyebrow">Our approach</p><h2 class="h2" id="approach-title">How we make it</h2></div>
-    <div><p class="approach-text">We write explainers the way a good teacher speaks: one idea at a time, in the order a viewer needs it, with a picture for every step.</p><ol class="steps-compact"><li><span class="num">01</span><h3 class="h3">Brief</h3><p>Understand the objective and the creative vision.</p></li><li><span class="num">02</span><h3 class="h3">Direction</h3><p>Develop the concept, treatment and storyboard.</p></li><li><span class="num">03</span><h3 class="h3">Production</h3><p>Generate, direct, edit and refine the film.</p></li><li><span class="num">04</span><h3 class="h3">Delivery</h3><p>Sound, music, grade and every agreed format.</p></li></ol><a class="link-arrow" href="/process/">The full process <span class="arr" aria-hidden="true">→</span></a></div>
+    <div><p class="approach-text">We write explainers the way a good teacher speaks: one idea at a time, in the order a viewer needs it, with a picture for every step.</p><ol class="steps-compact"><li><span class="num">01</span><h3 class="h3">Brief</h3><p>Understand the objective and the creative vision.</p></li><li><span class="num">02</span><h3 class="h3">Direction</h3><p>Develop the concept, treatment and storyboard.</p></li><li><span class="num">03</span><h3 class="h3">Production</h3><p>Direct, produce, edit and refine the film.</p></li><li><span class="num">04</span><h3 class="h3">Delivery</h3><p>Sound, music, grade and every agreed format.</p></li></ol><a class="link-arrow" href="/process/">The full process <span class="arr" aria-hidden="true">→</span></a></div>
   </div>
 </section>
 <section class="section" id="examples" aria-labelledby="ex-title">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="eyebrow">Examples</p><h2 class="h2" id="ex-title">Related films</h2></div>
+      <div><p class="eyebrow">More examples</p><h2 class="h2" id="ex-title">More related films</h2></div>
       
     </div>
-    <div class="film-grid"><article class="film" data-film="latitudes" data-cat="education" data-lang="en">
-  <button class="film-media" type="button" data-play aria-label="Play Latitudes">
-    <img src="/assets/img/latitudes-800.jpg" srcset="/assets/img/latitudes-800.jpg 800w, /assets/img/latitudes-1600.jpg 1600w" sizes="(max-width: 760px) 100vw, 50vw" width="1600" height="900" alt="A teacher and a student beside a glowing globe marked with coordinates" loading="lazy" decoding="async">
+    <div class="film-grid one"><article class="film" data-film="longitudes" data-cat="education" data-kind="client">
+  <button class="film-media" type="button" data-play aria-label="Play Longitudes and the Prime Meridian, 5:02">
+    <img src="/assets/img/longitudes-800.jpg" srcset="/assets/img/longitudes-800.jpg 800w, /assets/img/longitudes-1600.jpg 1600w" sizes="(max-width: 860px) 100vw, 50vw" width="1600" height="900" alt="A teacher points across a valley at sunset while a student holds a compass" loading="lazy" decoding="async">
     <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
+    <span class="len" aria-hidden="true">5:02</span>
   </button>
   <div class="film-cap">
-    <p class="tags"><span>Education</span><span>Client film</span></p>
-    <h3 class="h3">Latitudes</h3>
-    <p class="meta">Locating Places on the Earth, Part 2 · For an online school</p>
-    <div class="film-row"><div class="langs" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">English</button><button type="button" data-lang="hi" aria-pressed="false">Hindi</button></div><span class="meta len" data-length>4:20 · English</span></div>
-  </div>
-</article><article class="film" data-film="longitudes" data-cat="education" data-lang="en">
-  <button class="film-media" type="button" data-play aria-label="Play Longitudes and the Prime Meridian">
-    <img src="/assets/img/longitudes-800.jpg" srcset="/assets/img/longitudes-800.jpg 800w, /assets/img/longitudes-1600.jpg 1600w" sizes="(max-width: 760px) 100vw, 50vw" width="1600" height="900" alt="A teacher points across a valley at sunset while a student holds a compass" loading="lazy" decoding="async">
-    <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
-  </button>
-  <div class="film-cap">
-    <p class="tags"><span>Education</span><span>Client film</span></p>
+    <p class="tags"><span>Education</span><span class="kind kind-client">Client film</span></p>
     <h3 class="h3">Longitudes and the Prime Meridian</h3>
     <p class="meta">Locating Places on the Earth, Part 3 · For an online school</p>
-    <div class="film-row"><div class="langs" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">English</button><button type="button" data-lang="hi" aria-pressed="false">Hindi</button></div><span class="meta len" data-length>5:02 · English</span></div>
+    <p class="film-sum">The same cast travels from a valley at sunset to Greenwich to show how longitude and time are measured.</p>
   </div>
 </article></div>
   </div>
@@ -152,7 +152,7 @@ document.documentElement.classList.add('js');
     <h2 class="h2" id="cta-title">Planning an explainer film?</h2>
     <div class="cta-side">
       <p>Tell us what it needs to do and who it is for. We will reply with questions, a direction and a fixed quote.</p>
-      <div class="actions"><a class="btn light" href="/contact/?need=Explainer%20film">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
+      <div class="actions"><a class="btn inv" href="/contact/?need=Explainer%20film">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
     </div>
   </div>
 </section>
@@ -175,8 +175,9 @@ document.documentElement.classList.add('js');
   <div class="player-top"><p class="player-title" id="player-title"></p><button class="player-close" id="player-close" type="button">Close</button></div>
   <div class="stage" id="stage"></div>
 </dialog>
-<script type="application/json" id="film-data">{"latitudes":{"title":"Latitudes · Locating Places on the Earth, Part 2","poster":"/assets/img/latitudes-1600.jpg","versions":[{"lang":"en","label":"English","src":"/videos/latitudes-en.mp4","length":"4:20"},{"lang":"hi","label":"Hindi","src":"/videos/latitudes-hi.mp4","length":"4:49"}]},"longitudes":{"title":"Longitudes and the Prime Meridian · Locating Places on the Earth, Part 3","poster":"/assets/img/longitudes-1600.jpg","versions":[{"lang":"en","label":"English","src":"/videos/longitudes-en.mp4","length":"5:02"},{"lang":"hi","label":"Hindi","src":"/videos/longitudes-hi.mp4","length":"5:12"}]}}</script>
-<script src="/assets/site.js?v=2" defer></script>
+<script type="application/json" id="film-data">{"latitudes":{"title":"Latitudes · Locating Places on the Earth, Part 2","poster":"/assets/img/latitudes-1600.jpg","src":"/videos/latitudes-en.mp4","small":"/videos/latitudes-en.mp4"},"longitudes":{"title":"Longitudes and the Prime Meridian · Locating Places on the Earth, Part 3","poster":"/assets/img/longitudes-1600.jpg","src":"/videos/longitudes-en.mp4","small":"/videos/longitudes-en.mp4"}}</script>
+<script src="/assets/site.js?v=3" defer></script>
 <script src="/bear.js?v=5" defer></script>
+<script>if(document.documentElement.hasAttribute("data-preview")){var s=document.createElement("script");s.src="/assets/preview.js?v=1";s.defer=true;document.body.appendChild(s)}</script>
 </body>
 </html>

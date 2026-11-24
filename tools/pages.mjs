@@ -1,7 +1,7 @@
 // Amble Films: one function per page. Shared pieces come from build.mjs.
 import {
-  socialList, head, header, footer, ctaBand, filmCard, filmData, reelData, reelFigure, pageHero, secHead, stepsCompact,
-  write, esc, svc, contactFor, arrow, pad, ld, ORG, crumbs, FILMS, REEL, SITE, CATEGORIES, KINDS,
+  socialList, head, header, footer, ctaBand, filmCard, filmData, reelData, reelFigure, stockVisual, previewFirst, pageHero, secHead, stepsCompact,
+  write, esc, svc, contactFor, arrow, playIcon, pad, ld, ORG, crumbs, FILMS, REEL, SITE, CATEGORIES, CATEGORY_INTROS, KINDS,
   SERVICES, INDUSTRIES, STEPS, FAQ
 } from "./lib.mjs";
 
@@ -35,7 +35,7 @@ function home() {
   <div class="wrap">
     ${secHead("Selected work", "Recent films", "work-title", `<a class="link-arrow" href="/work/">Explore all work ${arrow}</a>`)}
     <div class="film-grid home-films${used.length === 1 ? " one" : ""}">
-      ${used.map(f => filmCard(f)).join("\n      ")}
+      ${used.map((f, i) => filmCard(f, { lead: i === 0 && used.length === 3 })).join("\n      ")}
     </div>
   </div>
 </section>
@@ -68,15 +68,17 @@ function home() {
 
 <section class="section dark" aria-labelledby="why-title">
   <div class="wrap">
-    ${secHead("Why Amble Films", "Craft first. Tools second.", "why-title")}
+    ${secHead("Why Amble Films", "Directed with intent. Finished with care.", "why-title")}
     <ul class="points">
-      <li><h3 class="h3">Directed, not generated</h3><p>Every shot is chosen, cut and graded by a director, so the film looks intended rather than produced by chance.</p></li>
+      <li><h3 class="h3">A director on every frame</h3><p>Every shot is chosen, cut and graded by a director, so the film looks intended rather than produced by chance.</p></li>
       <li><h3 class="h3">Built around your objective</h3><p>We start from what the film must achieve and who must watch it, then design the story to do that job.</p></li>
       <li><h3 class="h3">Worlds without limits</h3><p>Settings, scale and characters that would be impractical to shoot become part of the creative palette.</p></li>
       <li><h3 class="h3">One director, brief to delivery</h3><p>The person you brief is the person who directs your film, wherever in the world you are.</p></li>
     </ul>
   </div>
 </section>
+
+${previewFirst()}
 
 <section class="section" aria-labelledby="process-title">
   <div class="wrap">
@@ -92,27 +94,61 @@ ${ctaBand()}
 }
 
 /* ======================= WORK ======================= */
+// Every category gets an introduction. A category shows its own films first; with none yet, it shows a related
+// Amble Films film or, failing that, a captioned licensed stock still. It never shows an empty state.
+function categoryCard(c, used) {
+  const intro = CATEGORY_INTROS[c], own = FILMS.filter(f => f.category === c);
+  const s = intro.service ? svc(intro.service) : null;
+  const img = f => `<img src="${f.poster}-800.jpg" width="800" height="450" alt="${esc(f.alt)}" loading="lazy" decoding="async">`;
+  let media = "", status = "";
+  if (own.length) {
+    // show a different film from the one leading the grid above, where there is one
+    const pick = own.find(f => f !== FILMS[0] && !used.has(f)) || own[0]; used.add(pick);
+    media = `<button class="cat-media" type="button" data-filter-to="${c}" aria-label="Show ${esc(CATEGORIES[c])}">${img(pick)}</button>`;
+    status = `${own.length} ${own.length === 1 ? "film" : "films"} above`;
+  } else if (intro.visual) {
+    media = stockVisual(intro.visual, { still: true });
+  } else {
+    const related = FILMS.find(f => intro.service && (f.services || []).includes(intro.service) && !used.has(f))
+      || FILMS.find(f => intro.service && (f.services || []).includes(intro.service));
+    if (related) { used.add(related);
+      media = `<div class="cat-media">${img(related)}<span class="cat-note">Related film: ${esc(related.title)}</span></div>`;
+      status = "Shown in our " + (KINDS[related.kind]?.label || "film").toLowerCase() + "s"; }
+  }
+  const link = own.length ? `<button class="link-arrow" type="button" data-filter-to="${c}">Watch ${esc(CATEGORIES[c].toLowerCase())} ${arrow}</button>`
+    : s ? `<a class="link-arrow" href="/services/${s.slug}/">${esc(s.name)}: what you receive ${arrow}</a>`
+    : `<a class="link-arrow" href="/contact/?need=Not%20sure%20yet">Explore an idea with us ${arrow}</a>`;
+  return `<li class="cat">${media}<div class="cat-body">${status ? `<p class="cat-status">${esc(status)}</p>` : ""}<h3 class="h3">${esc(CATEGORIES[c])}</h3><p>${esc(intro.line)}</p>${link}</div></li>`;
+}
+
 function work() {
   const cats = Object.keys(CATEGORIES).filter(c => FILMS.some(f => f.category === c));
   const kinds = Object.keys(KINDS).filter(k => FILMS.some(f => f.kind === k));
   const filters = cats.length > 1 ? `<div class="filters" role="group" aria-label="Filter films by category">
-      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="all" aria-pressed="true">All films</button>
       ${cats.map(c => `<button type="button" data-filter="${c}" aria-pressed="false">${esc(CATEGORIES[c])}</button>`).join("\n      ")}
     </div>` : "";
   const legend = `<p class="legend">${kinds.map(k => `<span><b>${esc(KINDS[k].label)}</b> ${esc(KINDS[k].note)}</span>`).join("")}</p>`;
   const body = `<main id="main">
-${pageHero({ eyebrow: "Our work", h1: "Selected films.", lead: "Every film is labelled, so you always know whether you are watching work made for a client, a concept film or a visual study." })}
-<section class="section tight-top" aria-labelledby="films-title">
+${pageHero({ eyebrow: "Our work", h1: "Films that do the talking.", lead: "Every film is labelled, so you always know whether you are watching work made for a client, a film made for our own studio or a concept." })}
+<section class="section tight-top" id="films" aria-labelledby="films-title">
   <div class="wrap">
     <h2 class="sr-only" id="films-title">All films</h2>
     <div class="work-bar">${filters}${legend}</div>
     <div class="film-grid work" data-film-grid>
-      ${FILMS.map((f, i) => filmCard(f, { eager: i === 0 })).join("\n      ")}
+      ${FILMS.map((f, i) => filmCard(f, { eager: i === 0, lead: i === 0, summary: true })).join("\n      ")}
     </div>
-    <p class="empty" data-empty hidden>No films in this category yet.</p>
   </div>
 </section>
-<section class="section alt" aria-labelledby="showreel-title">
+<section class="section alt" aria-labelledby="cats-title">
+  <div class="wrap">
+    ${secHead("What we make", "Six kinds of film", "cats-title", `<p class="lead">Our portfolio is growing. Where a category has no film of ours yet, we say so plainly.</p>`)}
+    <ul class="cat-grid">
+      ${(() => { const used = new Set(); return Object.keys(CATEGORIES).map(c => categoryCard(c, used)); })().join("\n      ")}
+    </ul>
+  </div>
+</section>
+<section class="section" aria-labelledby="showreel-title">
   <div class="wrap">
     ${secHead("Showreel", "Moments from our films", "showreel-title")}
     ${reelFigure()}
@@ -120,8 +156,10 @@ ${pageHero({ eyebrow: "Our work", h1: "Selected films.", lead: "Every film is la
 </section>
 ${ctaBand({ title: "Looking for something specific?", text: "Tell us about your project and we will show you how we would approach it." })}
 </main>`;
-  write("/work/", head({ path: "/work/", title: T("Our work: selected films"), description: "Selected films by Amble Films, each labelled as client work, a concept film or a visual study.",
-    schema: crumbs([["Work", "/work/"]]) }) + header("/work/") + body + footer(filmData(FILMS) + reelData()), { priority: "0.9" });
+  const lead = FILMS[0];
+  write("/work/", head({ path: "/work/", title: T("Our work: brand, advertising and educational films"), description: "Films by Amble Films, each labelled as client work, a studio film or a concept: brand, product, advertising, explainer and educational films.",
+    schema: crumbs([["Work", "/work/"]]), image: lead.poster + "-1600.jpg", imageAlt: lead.alt, imageW: 1600, imageH: 900 })
+    + header("/work/") + body + footer(filmData(FILMS) + reelData()), { priority: "0.9" });
 }
 
 /* ======================= SERVICES ======================= */
@@ -157,13 +195,25 @@ function serviceDetail(s) {
   const examples = FILMS.filter(f => (f.services || []).includes(s.slug));
   const others = SERVICES.filter(o => o !== s);
   const list = (title, items) => `<div class="detail-col"><h2 class="label">${title}</h2><ul class="ticks">${items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div>`;
-  const exampleBlock = examples.length
-    ? `<div class="film-grid${examples.length === 1 ? " one" : ""}">${examples.map(f => filmCard(f)).join("")}</div>`
-    : `<div class="no-examples"><p>We are adding films in this category to our work. Tell us about your project and we will show you how we would approach it, with references and a written treatment.</p><a class="link-arrow" href="/work/">See all our work ${arrow}</a></div>`;
+  const rest = examples.slice(1);
+  const exampleBlock = rest.length
+    ? `<div class="film-grid${rest.length === 1 ? " one" : ""}">${rest.map(f => filmCard(f, { summary: true })).join("")}</div>`
+    : `<div class="no-examples"><p>Films made this way get the same craft as every film in our portfolio: a director on every frame, one consistent look and a finish made with care. Tell us what you publish and how often, and we will show you how a run of films would come together.</p><div class="actions"><a class="btn ghost" href="${contactFor(s.need)}">Discuss your project</a><a class="link-arrow" href="/work/">Watch our films ${arrow}</a></div></div>`;
+  // The hero shows the strongest related Amble Films film; a captioned stock loop only when there is none.
+  const heroFilm = examples[0];
+  const heroVisual = heroFilm
+    ? `<div class="wrap-wide svc-visual"><article class="film film-hero" data-film="${heroFilm.id}" data-cat="${heroFilm.category}" data-kind="${heroFilm.kind}">
+    <button class="film-media" type="button" data-play aria-label="Play ${esc(heroFilm.title)}, ${esc(heroFilm.length)}">
+      <img src="${heroFilm.poster}-800.jpg" srcset="${heroFilm.poster}-800.jpg 800w, ${heroFilm.poster}-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="${esc(heroFilm.alt)}" fetchpriority="high" decoding="async">
+      <span class="play" aria-hidden="true">${playIcon}</span>
+      <span class="hero-film-cap"><b>${esc(heroFilm.title)}</b> ${esc(KINDS[heroFilm.kind].label)} · ${esc(heroFilm.length)}</span>
+    </button></article></div>`
+    : s.visual ? `<div class="wrap-wide svc-visual">${stockVisual(s.visual)}</div>` : "";
   const body = `<main id="main">
 ${pageHero({ crumb: crumbNav([["Services", "/services/"], [s.name, p]]), eyebrow: s.name, h1: s.h1, lead: s.lead,
   actions: `<a class="btn" href="${contactFor(s.need)}">Start a project</a>` + (examples.length
-    ? `<a class="link-arrow" href="#examples">See related films ${arrow}</a>` : `<a class="link-arrow" href="/work/">See our work ${arrow}</a>`) })}
+    ? `<a class="link-arrow" href="#featured">Watch a related film ${arrow}</a>` : `<a class="link-arrow" href="/work/">See our work ${arrow}</a>`) })}
+${heroVisual ? `<section class="section tight-top hero-visual" id="featured" aria-label="${heroFilm ? "Featured film" : "Illustrative footage"}">${heroVisual}</section>` : ""}
 <section class="section tight-top" aria-label="What is included">
   <div class="wrap detail-grid">
     ${list("What you receive", s.receive)}
@@ -177,13 +227,13 @@ ${pageHero({ crumb: crumbNav([["Services", "/services/"], [s.name, p]]), eyebrow
     <div><p class="approach-text">${esc(s.approach)}</p>${stepsCompact()}<a class="link-arrow" href="/process/">The full process ${arrow}</a></div>
   </div>
 </section>
-<section class="section" id="examples" aria-labelledby="ex-title">
+${rest.length || !examples.length ? `<section class="section" id="examples" aria-labelledby="ex-title">
   <div class="wrap">
-    ${secHead("Examples", examples.length ? "Related films" : "Films in this category", "ex-title")}
+    ${secHead(rest.length ? "More examples" : "Our films", rest.length ? "More related films" : "The same craft, every time", "ex-title")}
     ${exampleBlock}
   </div>
-</section>
-<section class="section tight-top" aria-labelledby="other-title">
+</section>` : ""}
+<section class="section ${rest.length || !examples.length ? "tight-top" : "short-top"}" aria-labelledby="other-title">
   <div class="wrap">
     <h2 class="label" id="other-title">Other services</h2>
     <ul class="chips-links">${others.map(o => `<li><a href="/services/${o.slug}/">${esc(o.name)}</a></li>`).join("")}</ul>
@@ -291,7 +341,8 @@ ${pageHero({ eyebrow: "Our process", h1: "A clear path from brief to final film.
     </ol>
   </div>
 </section>
-<section class="section alt" aria-labelledby="faq-title">
+${previewFirst()}
+<section class="section" aria-labelledby="faq-title">
   <div class="wrap faq-layout">
     <div><p class="eyebrow">Questions</p><h2 class="h2" id="faq-title">What clients ask before they start</h2></div>
     <div class="faq">

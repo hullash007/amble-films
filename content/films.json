@@ -1,15 +1,43 @@
 {
-  "_howto": "Every film on the site comes from this file. To change a film: put the new .mp4 in /videos and two 16:9 poster JPGs in /assets/img named NAME-800.jpg and NAME-1600.jpg, set poster to /assets/img/NAME, edit the entry below, then run: node tools/build.mjs. Set featured to true for up to three films to show them on the home page. kind must be one of: client (made for a paying client), concept (a speculative film made to show an idea), study (a short visual experiment). category must be one of: brand, product, advertising, explainer, education, experiments. services lists the service pages the film appears on as an example.",
+  "_howto": "Every film on the site comes from this file, in the order listed. To add a film: put a 1080p .mp4 (and optionally a 720p one for phones) in /videos and two 16:9 poster JPGs in /assets/img named NAME-800.jpg and NAME-1600.jpg, set poster to /assets/img/NAME, add an entry below, then run: node tools/build.mjs. Set featured to true for up to three films to show them on the home page (the first featured film is shown largest). kind must be one of: client (made for a paying client), studio (made by Amble Films for its own brand), concept (a speculative film made to explore an idea), study (a short visual experiment). category must be one of: brand, product, advertising, explainer, education, concepts. services lists the service pages the film appears on as an example. Never list stock footage here: films on this page are Amble Films productions.",
 
   "reel": {
     "title": "Amble Films showreel",
-    "poster": "/assets/img/reel-poster.jpg",
-    "large": "/videos/reel-1080.mp4",
-    "small": "/videos/reel-720.mp4",
-    "alt": "Moments from Amble Films productions"
+    "poster": "/assets/img/reel-studio-poster.jpg",
+    "large": "/videos/reel-studio-1080.mp4",
+    "small": "/videos/reel-studio-720.mp4",
+    "alt": "Moments from Amble Films productions: a film set, a watch commercial, a lesson film and a colour grading suite"
   },
 
   "films": [
+    {
+      "id": "after-hours",
+      "title": "After Hours",
+      "kind": "studio",
+      "category": "brand",
+      "summary": "One night in the studio as a fragrance, a watch and a car commercial take shape, from the first sketch to the final review.",
+      "poster": "/assets/img/after-hours",
+      "alt": "A cinema camera on a dolly track films a woman in a red gown on a candlelit set",
+      "featured": true,
+      "services": ["advertising-films", "product-films"],
+      "src": "/videos/after-hours-1080.mp4",
+      "small": "/videos/after-hours-720.mp4",
+      "length": "1:11"
+    },
+    {
+      "id": "brief-to-screen",
+      "title": "From Brief to Screen",
+      "kind": "studio",
+      "category": "brand",
+      "summary": "A business owner's idea becomes a finished campaign: the brief, the creative session, the shoot, the grade and the handshake.",
+      "poster": "/assets/img/brief-to-screen",
+      "alt": "A film crew with a boom microphone records two executives in a high-rise office at sunset",
+      "featured": true,
+      "services": ["brand-films", "launch-campaign-films"],
+      "src": "/videos/brief-to-screen-1080.mp4",
+      "small": "/videos/brief-to-screen-720.mp4",
+      "length": "1:17"
+    },
     {
       "id": "latitudes",
       "title": "Latitudes",
@@ -22,10 +50,8 @@
       "alt": "A teacher and a student beside a glowing globe marked with coordinates",
       "featured": true,
       "services": ["educational-films", "explainer-films"],
-      "versions": [
-        { "lang": "en", "label": "English", "src": "/videos/latitudes-en.mp4", "length": "4:20" },
-        { "lang": "hi", "label": "Hindi", "src": "/videos/latitudes-hi.mp4", "length": "4:49" }
-      ]
+      "src": "/videos/latitudes-en.mp4",
+      "length": "4:20"
     },
     {
       "id": "longitudes",
@@ -37,12 +63,10 @@
       "summary": "The same cast travels from a valley at sunset to Greenwich to show how longitude and time are measured.",
       "poster": "/assets/img/longitudes",
       "alt": "A teacher points across a valley at sunset while a student holds a compass",
-      "featured": true,
+      "featured": false,
       "services": ["educational-films", "explainer-films"],
-      "versions": [
-        { "lang": "en", "label": "English", "src": "/videos/longitudes-en.mp4", "length": "5:02" },
-        { "lang": "hi", "label": "Hindi", "src": "/videos/longitudes-hi.mp4", "length": "5:12" }
-      ]
+      "src": "/videos/longitudes-en.mp4",
+      "length": "5:02"
     }
   ]
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="original-black">
 <head>
 <meta name="robots" content="noindex">
 <meta charset="utf-8">
@@ -9,11 +9,15 @@
 <meta name="theme-color" content="#F5F1EA">
 <script>
 if (location.hostname === 'hullash007.github.io') location.replace('https://amblefilms.in' + location.pathname.replace(/^\/amble-films/, '') + location.search + location.hash);
-document.documentElement.classList.add('js');
+(function(){var T=["original-black","warm-dark","light-cream"],t="original-black",h=location.hostname,d=document.documentElement;
+var p=true&&(/^(localhost|127\.0\.0\.1)$/.test(h)||/--amble-films\.netlify\.app$/.test(h));
+if(p){try{var q=new URLSearchParams(location.search).get("theme");if(T.indexOf(q)>-1){localStorage.setItem("amble-theme",q);t=q}else{var s=localStorage.getItem("amble-theme");if(T.indexOf(s)>-1)t=s}}catch(e){}d.setAttribute("data-preview","")}
+d.setAttribute("data-theme",t);d.classList.add("js")})();
 </script>
 <link rel="canonical" href="https://amblefilms.in/404.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Amble Films">
+<meta property="og:locale" content="en_IN">
 <meta property="og:url" content="https://amblefilms.in/404.html">
 <meta property="og:title" content="Page not found | Amble Films">
 <meta property="og:description" content="This page could not be found.">
@@ -31,7 +35,7 @@ document.documentElement.classList.add('js');
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/hanken-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=4">
+<link rel="stylesheet" href="/assets/site.css?v=5">
 
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
@@ -63,7 +67,7 @@ document.documentElement.classList.add('js');
     </nav>
     <div class="bar-end">
       <a class="btn small nav-cta" href="/contact/">Start a project</a>
-      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span>Menu</span></button>
+      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span class="menu-word">Menu</span></button>
     </div>
   </div>
 </header>
@@ -118,7 +122,8 @@ document.documentElement.classList.add('js');
   <div class="stage" id="stage"></div>
 </dialog>
 
-<script src="/assets/site.js?v=2" defer></script>
+<script src="/assets/site.js?v=3" defer></script>
 <script src="/bear.js?v=5" defer></script>
+<script>if(document.documentElement.hasAttribute("data-preview")){var s=document.createElement("script");s.src="/assets/preview.js?v=1";s.defer=true;document.body.appendChild(s)}</script>
 </body>
 </html>

@@ -4,21 +4,36 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SITE, CATEGORIES, KINDS, SERVICES, INDUSTRIES, STEPS, FAQ } from "../content/site.mjs";
+import { SITE, CATEGORIES, CATEGORY_INTROS, KINDS, STOCK, STOCK_NOTE, SERVICES, INDUSTRIES, STEPS, FAQ } from "../content/site.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = f => fs.readFileSync(path.join(ROOT, f), "utf8");
 const DATA = JSON.parse(read("content/films.json"));
 const FILMS = DATA.films, REEL = DATA.reel;
 const LOGO = read("content/logo-inline.svg");
-const V = { css: 4, js: 2, bear: 5 };
+const V = { css: 5, js: 3, bear: 5, preview: 1 };
 const TODAY = new Date().toISOString().slice(0, 10);
+
+/* ---------------- Colour themes ----------------
+   Three palettes share one stylesheet (see the top of /assets/site.css).
+   DEFAULT_THEME is what every visitor sees. Change it to the approved theme and rebuild.
+   The theme switcher exists only on preview hosts (localhost and Netlify previews such as
+   deploy-preview-2--amble-films.netlify.app); on amblefilms.in the ?theme= parameter is ignored
+   and the switcher script is never loaded. Set PREVIEW_THEMES to false to remove it completely. */
+const THEMES = ["original-black", "warm-dark", "light-cream"];
+const DEFAULT_THEME = "original-black";
+const PREVIEW_THEMES = true;
+const themeBoot = `(function(){var T=${JSON.stringify(THEMES)},t="${DEFAULT_THEME}",h=location.hostname,d=document.documentElement;
+var p=${PREVIEW_THEMES}&&(/^(localhost|127\\.0\\.0\\.1)$/.test(h)||/--amble-films\\.netlify\\.app$/.test(h));
+if(p){try{var q=new URLSearchParams(location.search).get("theme");if(T.indexOf(q)>-1){localStorage.setItem("amble-theme",q);t=q}else{var s=localStorage.getItem("amble-theme");if(T.indexOf(s)>-1)t=s}}catch(e){}d.setAttribute("data-preview","")}
+d.setAttribute("data-theme",t);d.classList.add("js")})();`;
 
 const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const svc = slug => SERVICES.find(s => s.slug === slug);
 const svcShort = s => s.short || s.name;
 const contactFor = need => "/contact/?need=" + encodeURIComponent(need);
 const arrow = '<span class="arr" aria-hidden="true">→</span>';
+const playIcon = '<svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg>';
 const pad = n => String(n).padStart(2, "0");
 const ld = o => '<script type="application/ld+json">' + JSON.stringify(o) + "</script>";
 const ORG = { "@type": "Organization", name: SITE.name, url: SITE.url + "/" };
@@ -27,10 +42,10 @@ const crumbs = list => ld({ "@context": "https://schema.org", "@type": "Breadcru
 
 /* ---------------- Shared pieces ---------------- */
 
-function head({ path: p, title, description, schema = "" }) {
+function head({ path: p, title, description, schema = "", image = "/og-image.png", imageAlt = "The Amble Films logo, a bear walking along the top of the word Amble", imageW = 1200, imageH = 630 }) {
   const url = SITE.url + p;
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="${DEFAULT_THEME}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,22 +54,23 @@ function head({ path: p, title, description, schema = "" }) {
 <meta name="theme-color" content="#F5F1EA">
 <script>
 if (location.hostname === 'hullash007.github.io') location.replace('https://amblefilms.in' + location.pathname.replace(/^\\/amble-films/, '') + location.search + location.hash);
-document.documentElement.classList.add('js');
+${themeBoot}
 </script>
 <link rel="canonical" href="${url}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${SITE.name}">
+<meta property="og:locale" content="en_IN">
 <meta property="og:url" content="${url}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
-<meta property="og:image" content="${SITE.url}/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Amble Films logo, a bear walking along the top of the word Amble">
+<meta property="og:image" content="${SITE.url}${image}">
+<meta property="og:image:width" content="${imageW}">
+<meta property="og:image:height" content="${imageH}">
+<meta property="og:image:alt" content="${esc(imageAlt)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
-<meta name="twitter:image" content="${SITE.url}/og-image.png">
+<meta name="twitter:image" content="${SITE.url}${image}">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -78,7 +94,7 @@ function header(active) {
         <div class="sub" id="sub-services"><ul>${subLinks}</ul><a class="sub-all" href="/services/">All services ${arrow}</a></div>
       </div>`
     : `<a href="${href}"${active.startsWith(href) ? ' aria-current="page"' : ""}>${name}</a>`).join("\n      ");
-  const mSub = SERVICES.map(s => `<li><a href="/services/${s.slug}/">${esc(s.name)}</a></li>`).join("");
+  const mSub = SERVICES.map(s => `<li><a href="/services/${s.slug}/"${cur("/services/" + s.slug + "/")}>${esc(s.name)}</a></li>`).join("");
   return `<body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="bar">
@@ -89,7 +105,7 @@ function header(active) {
     </nav>
     <div class="bar-end">
       <a class="btn small nav-cta" href="/contact/"${cur("/contact/")}>Start a project</a>
-      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span>Menu</span></button>
+      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span class="menu-word">Menu</span></button>
     </div>
   </div>
 </header>
@@ -103,7 +119,7 @@ function header(active) {
     <ul>
       <li><a href="/"${cur("/")}>Home</a></li>
       <li><a href="/work/"${cur("/work/")}>Work</a></li>
-      <li><details${active.startsWith("/services/") ? " open" : ""}><summary>Services</summary><ul class="menu-sub">${mSub}<li><a href="/services/">All services</a></li></ul></details></li>
+      <li><details${active.startsWith("/services/") ? " open" : ""}><summary>Services</summary><ul class="menu-sub">${mSub}<li><a href="/services/"${cur("/services/")}>All services</a></li></ul></details></li>
       <li><a href="/industries/"${cur("/industries/")}>Industries</a></li>
       <li><a href="/studio/"${cur("/studio/")}>Studio</a></li>
       <li><a href="/process/"${cur("/process/")}>Process</a></li>
@@ -123,7 +139,7 @@ function ctaBand({ title = "Have a story, a product or an idea that deserves a f
     <h2 class="h2" id="cta-title">${esc(title)}</h2>
     <div class="cta-side">
       <p>${esc(text)}</p>
-      <div class="actions"><a class="btn light" href="${need ? contactFor(need) : "/contact/"}">Start a project</a><a class="link-arrow on-dark" data-wa href="#">Message on WhatsApp ${arrow}</a></div>
+      <div class="actions"><a class="btn inv" href="${need ? contactFor(need) : "/contact/"}">Start a project</a><a class="link-arrow on-dark" data-wa href="#">Message on WhatsApp ${arrow}</a></div>
     </div>
   </div>
 </section>`;
@@ -163,6 +179,7 @@ function footer(extraScripts = "") {
 ${extraScripts}
 <script src="/assets/site.js?v=${V.js}" defer></script>
 <script src="/bear.js?v=${V.bear}" defer></script>
+<script>if(document.documentElement.hasAttribute("data-preview")){var s=document.createElement("script");s.src="/assets/preview.js?v=${V.preview}";s.defer=true;document.body.appendChild(s)}</script>
 </body>
 </html>
 `;
@@ -171,24 +188,22 @@ ${extraScripts}
 /* ---------------- Film components ---------------- */
 
 const filmData = list => '<script type="application/json" id="film-data">' + JSON.stringify(Object.fromEntries(list.map(f => [f.id, {
-  title: f.title + (f.series ? " · " + f.series : ""), poster: f.poster + "-1600.jpg", versions: f.versions }]))).replace(/</g, "\\u003c") + "</script>";
+  title: f.title + (f.series ? " · " + f.series : ""), poster: f.poster + "-1600.jpg", src: f.src, small: f.small || f.src }]))).replace(/</g, "\\u003c") + "</script>";
 const reelData = () => '<script type="application/json" id="reel-data">' + JSON.stringify(REEL).replace(/</g, "\\u003c") + "</script>";
 
-function filmCard(f, { eager = false, sizes = "(max-width: 760px) 100vw, 50vw" } = {}) {
-  const v0 = f.versions[0];
-  const langs = f.versions.length > 1
-    ? `<div class="langs" role="group" aria-label="Language">${f.versions.map((v, i) => `<button type="button" data-lang="${v.lang}" aria-pressed="${i === 0}">${esc(v.label)}</button>`).join("")}</div>` : "";
+function filmCard(f, { eager = false, lead = false, sizes = "(max-width: 860px) 100vw, 50vw", summary = false } = {}) {
   const byline = [f.series, f.kind === "client" && f.client ? "For " + f.client.replace(/^An? /, m => m.toLowerCase()) : ""].filter(Boolean).join(" · ");
-  return `<article class="film" data-film="${f.id}" data-cat="${f.category}" data-lang="${v0.lang}">
-  <button class="film-media" type="button" data-play aria-label="Play ${esc(f.title)}">
-    <img src="${f.poster}-800.jpg" srcset="${f.poster}-800.jpg 800w, ${f.poster}-1600.jpg 1600w" sizes="${sizes}" width="1600" height="900" alt="${esc(f.alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">
-    <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
+  return `<article class="film${lead ? " film-lead" : ""}" data-film="${f.id}" data-cat="${f.category}" data-kind="${f.kind}">
+  <button class="film-media" type="button" data-play aria-label="Play ${esc(f.title)}, ${esc(f.length)}">
+    <img src="${f.poster}-800.jpg" srcset="${f.poster}-800.jpg 800w, ${f.poster}-1600.jpg 1600w" sizes="${lead ? "100vw" : sizes}" width="1600" height="900" alt="${esc(f.alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">
+    <span class="play" aria-hidden="true">${playIcon}</span>
+    <span class="len" aria-hidden="true">${esc(f.length)}</span>
   </button>
   <div class="film-cap">
-    <p class="tags"><span>${esc(CATEGORIES[f.category] || f.category)}</span><span>${esc(KINDS[f.kind]?.label || "")}</span></p>
+    <p class="tags"><span>${esc(CATEGORIES[f.category] || f.category)}</span><span class="kind kind-${f.kind}">${esc(KINDS[f.kind]?.label || "")}</span></p>
     <h3 class="h3">${esc(f.title)}</h3>
     ${byline ? `<p class="meta">${esc(byline)}</p>` : ""}
-    <div class="film-row">${langs}<span class="meta len" data-length>${esc(v0.length)}${f.versions.length > 1 ? " · " + esc(v0.label) : ""}</span></div>
+    ${(summary || lead) && f.summary ? `<p class="film-sum">${esc(f.summary)}</p>` : ""}
   </div>
 </article>`;
 }
@@ -196,7 +211,17 @@ function filmCard(f, { eager = false, sizes = "(max-width: 760px) 100vw, 50vw" }
 function reelFigure() {
   return `<figure class="reel">
     <video data-reel data-large="${REEL.large}" data-small="${REEL.small}" poster="${REEL.poster}" muted loop playsinline preload="none" aria-hidden="true" width="1920" height="1080"></video>
-    <button class="reel-btn" type="button" data-play-reel><span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span><span>Watch the reel</span></button>
+    <button class="reel-btn" type="button" data-play-reel><span class="play" aria-hidden="true">${playIcon}</span><span>Watch the reel</span></button>
+  </figure>`;
+}
+
+// A licensed stock loop, always captioned as illustrative so it is never mistaken for Amble Films work.
+function stockVisual(id, { ratio = "wide", still = false } = {}) {
+  const s = STOCK[id]; if (!s) return "";
+  return `<figure class="stock ${still ? "still-only" : ratio}">
+    ${still ? "" : `<video data-ambient data-large="/videos/stock/${id}-720.mp4" data-small="/videos/stock/${id}-480.mp4" muted loop playsinline preload="none" aria-hidden="true" width="1280" height="720"></video>`}
+    <img src="/assets/img/stock/${id}-800.jpg" srcset="/assets/img/stock/${id}-800.jpg 800w, /assets/img/stock/${id}-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="${esc(s.alt)}" loading="lazy" decoding="async">
+    <figcaption>${esc(STOCK_NOTE)}</figcaption>
   </figure>`;
 }
 
@@ -217,6 +242,26 @@ const secHead = (eyebrow, title, id, aside = "") => `<div class="sec-head">
 
 const stepsCompact = () => `<ol class="steps-compact">${STEPS.map((s, i) => `<li><span class="num">${pad(i + 1)}</span><h3 class="h3">${s.name}</h3><p>${esc(s.line)}</p></li>`).join("")}</ol>`;
 
+/* Preview-first: conservative public wording only. The commercial terms (eligibility, length, fees, rights)
+   are in docs/preview-first-offer.md and are NOT published until the owner approves them. */
+function previewFirst({ alt = true } = {}) {
+  return `<section class="section preview-first${alt ? " alt" : ""}" aria-labelledby="pf-title">
+  <div class="wrap pf-in">
+    <div class="pf-head">
+      <p class="eyebrow">Before you commit</p>
+      <h2 class="h2" id="pf-title">See the direction before you commit.</h2>
+      <p class="lead">We start by understanding what your film needs to achieve, then develop a creative direction that shows how it could come together: the idea, the look and the feel. You review the approach before full production begins.</p>
+      <div class="actions"><a class="btn" href="/contact/">Discuss your project</a><a class="link-arrow" href="/process/">How we work ${arrow}</a></div>
+    </div>
+    <ol class="pf-steps">
+      <li><span class="num">01</span><h3 class="h3">Your objective, understood</h3><p>One conversation about what the film must do, who must watch it and where it will run.</p></li>
+      <li><span class="num">02</span><h3 class="h3">A direction you can see</h3><p>The idea, references and look for your film, shaped into something you can react to rather than imagine.</p></li>
+      <li><span class="num">03</span><h3 class="h3">Production when it feels right</h3><p>Full production starts once you are confident in the approach, with the plan and the price agreed first.</p></li>
+    </ol>
+  </div>
+</section>`;
+}
+
 /* ---------------- Writing pages ---------------- */
 
 const written = [];
@@ -231,5 +276,4 @@ function write(p, html, { sitemap = true, priority = "0.7" } = {}) {
   if (sitemap) written.push([p, priority]);
 }
 
-export { socialList, head, header, footer, ctaBand, filmCard, filmData, reelData, reelFigure, pageHero, secHead, stepsCompact, write, written, esc, svc, svcShort, contactFor, arrow, pad, ld, ORG, crumbs, FILMS, REEL, TODAY, ROOT, SITE, CATEGORIES, KINDS, SERVICES, INDUSTRIES, STEPS, FAQ };
-
+export { socialList, head, header, footer, ctaBand, filmCard, filmData, reelData, reelFigure, stockVisual, previewFirst, pageHero, secHead, stepsCompact, write, written, esc, svc, svcShort, contactFor, arrow, playIcon, pad, ld, ORG, crumbs, FILMS, REEL, TODAY, ROOT, SITE, CATEGORIES, CATEGORY_INTROS, KINDS, STOCK, STOCK_NOTE, SERVICES, INDUSTRIES, STEPS, FAQ };

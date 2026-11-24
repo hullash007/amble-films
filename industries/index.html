@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="original-black">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,11 +8,15 @@
 <meta name="theme-color" content="#F5F1EA">
 <script>
 if (location.hostname === 'hullash007.github.io') location.replace('https://amblefilms.in' + location.pathname.replace(/^\/amble-films/, '') + location.search + location.hash);
-document.documentElement.classList.add('js');
+(function(){var T=["original-black","warm-dark","light-cream"],t="original-black",h=location.hostname,d=document.documentElement;
+var p=true&&(/^(localhost|127\.0\.0\.1)$/.test(h)||/--amble-films\.netlify\.app$/.test(h));
+if(p){try{var q=new URLSearchParams(location.search).get("theme");if(T.indexOf(q)>-1){localStorage.setItem("amble-theme",q);t=q}else{var s=localStorage.getItem("amble-theme");if(T.indexOf(s)>-1)t=s}}catch(e){}d.setAttribute("data-preview","")}
+d.setAttribute("data-theme",t);d.classList.add("js")})();
 </script>
 <link rel="canonical" href="https://amblefilms.in/industries/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Amble Films">
+<meta property="og:locale" content="en_IN">
 <meta property="og:url" content="https://amblefilms.in/industries/">
 <meta property="og:title" content="Who we work with | Amble Films">
 <meta property="og:description" content="How Amble Films helps brands, startups, e-commerce, corporations, education, agencies and publishers with cinematic film.">
@@ -30,7 +34,7 @@ document.documentElement.classList.add('js');
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/hanken-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=4">
+<link rel="stylesheet" href="/assets/site.css?v=5">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://amblefilms.in/"},{"@type":"ListItem","position":2,"name":"Industries","item":"https://amblefilms.in/industries/"}]}</script>
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
@@ -62,7 +66,7 @@ document.documentElement.classList.add('js');
     </nav>
     <div class="bar-end">
       <a class="btn small nav-cta" href="/contact/">Start a project</a>
-      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span>Menu</span></button>
+      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span class="menu-word">Menu</span></button>
     </div>
   </div>
 </header>
@@ -169,7 +173,7 @@ document.documentElement.classList.add('js');
     <h2 class="h2" id="cta-title">Not on the list?</h2>
     <div class="cta-side">
       <p>If your organisation needs to explain, sell or teach something, a film can help. Tell us what you have in mind.</p>
-      <div class="actions"><a class="btn light" href="/contact/">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
+      <div class="actions"><a class="btn inv" href="/contact/">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
     </div>
   </div>
 </section>
@@ -193,7 +197,8 @@ document.documentElement.classList.add('js');
   <div class="stage" id="stage"></div>
 </dialog>
 
-<script src="/assets/site.js?v=2" defer></script>
+<script src="/assets/site.js?v=3" defer></script>
 <script src="/bear.js?v=5" defer></script>
+<script>if(document.documentElement.hasAttribute("data-preview")){var s=document.createElement("script");s.src="/assets/preview.js?v=1";s.defer=true;document.body.appendChild(s)}</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="original-black">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,11 +8,15 @@
 <meta name="theme-color" content="#F5F1EA">
 <script>
 if (location.hostname === 'hullash007.github.io') location.replace('https://amblefilms.in' + location.pathname.replace(/^\/amble-films/, '') + location.search + location.hash);
-document.documentElement.classList.add('js');
+(function(){var T=["original-black","warm-dark","light-cream"],t="original-black",h=location.hostname,d=document.documentElement;
+var p=true&&(/^(localhost|127\.0\.0\.1)$/.test(h)||/--amble-films\.netlify\.app$/.test(h));
+if(p){try{var q=new URLSearchParams(location.search).get("theme");if(T.indexOf(q)>-1){localStorage.setItem("amble-theme",q);t=q}else{var s=localStorage.getItem("amble-theme");if(T.indexOf(s)>-1)t=s}}catch(e){}d.setAttribute("data-preview","")}
+d.setAttribute("data-theme",t);d.classList.add("js")})();
 </script>
 <link rel="canonical" href="https://amblefilms.in/services/launch-campaign-films/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Amble Films">
+<meta property="og:locale" content="en_IN">
 <meta property="og:url" content="https://amblefilms.in/services/launch-campaign-films/">
 <meta property="og:title" content="Launch films and campaign content | Amble Films">
 <meta property="og:description" content="Launch films and campaign content: a hero launch film, teasers and cut-downs from one creative world, for every platform.">
@@ -30,7 +34,7 @@ document.documentElement.classList.add('js');
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/hanken-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=4">
+<link rel="stylesheet" href="/assets/site.css?v=5">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Launch Films & Campaign Content","serviceType":"Launch Films & Campaign Content","description":"Launch films and campaign content: a hero launch film, teasers and cut-downs from one creative world, for every platform.","url":"https://amblefilms.in/services/launch-campaign-films/","provider":{"@type":"Organization","name":"Amble Films","url":"https://amblefilms.in/"},"areaServed":"Worldwide"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://amblefilms.in/"},{"@type":"ListItem","position":2,"name":"Services","item":"https://amblefilms.in/services/"},{"@type":"ListItem","position":3,"name":"Launch Films & Campaign Content","item":"https://amblefilms.in/services/launch-campaign-films/"}]}</script>
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
@@ -62,7 +66,7 @@ document.documentElement.classList.add('js');
     </nav>
     <div class="bar-end">
       <a class="btn small nav-cta" href="/contact/">Start a project</a>
-      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span>Menu</span></button>
+      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span class="menu-word">Menu</span></button>
     </div>
   </div>
 </header>
@@ -76,7 +80,7 @@ document.documentElement.classList.add('js');
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="/work/">Work</a></li>
-      <li><details open><summary>Services</summary><ul class="menu-sub"><li><a href="/services/brand-films/">Brand Films</a></li><li><a href="/services/product-films/">Product Films</a></li><li><a href="/services/advertising-films/">Advertising Films</a></li><li><a href="/services/explainer-films/">Explainer Films</a></li><li><a href="/services/educational-films/">Educational Films</a></li><li><a href="/services/launch-campaign-films/">Launch Films &amp; Campaign Content</a></li><li><a href="/services/ongoing-content/">Ongoing Video Production</a></li><li><a href="/services/">All services</a></li></ul></details></li>
+      <li><details open><summary>Services</summary><ul class="menu-sub"><li><a href="/services/brand-films/">Brand Films</a></li><li><a href="/services/product-films/">Product Films</a></li><li><a href="/services/advertising-films/">Advertising Films</a></li><li><a href="/services/explainer-films/">Explainer Films</a></li><li><a href="/services/educational-films/">Educational Films</a></li><li><a href="/services/launch-campaign-films/" aria-current="page">Launch Films &amp; Campaign Content</a></li><li><a href="/services/ongoing-content/">Ongoing Video Production</a></li><li><a href="/services/">All services</a></li></ul></details></li>
       <li><a href="/industries/">Industries</a></li>
       <li><a href="/studio/">Studio</a></li>
       <li><a href="/process/">Process</a></li>
@@ -94,9 +98,15 @@ document.documentElement.classList.add('js');
     <p class="eyebrow">Launch Films &amp; Campaign Content</p>
     <h1 class="h1">A film for the day it goes public.</h1>
     <p class="lead">Launch films introduce something new: a product, a feature, a company. Campaign content keeps that story moving across every channel afterwards. We plan both from one creative world.</p>
-    <div class="actions"><a class="btn" href="/contact/?need=Launch%20or%20campaign">Start a project</a><a class="link-arrow" href="/work/">See our work <span class="arr" aria-hidden="true">→</span></a></div>
+    <div class="actions"><a class="btn" href="/contact/?need=Launch%20or%20campaign">Start a project</a><a class="link-arrow" href="#featured">Watch a related film <span class="arr" aria-hidden="true">→</span></a></div>
   </div>
 </section>
+<section class="section tight-top hero-visual" id="featured" aria-label="Featured film"><div class="wrap-wide svc-visual"><article class="film film-hero" data-film="brief-to-screen" data-cat="brand" data-kind="studio">
+    <button class="film-media" type="button" data-play aria-label="Play From Brief to Screen, 1:17">
+      <img src="/assets/img/brief-to-screen-800.jpg" srcset="/assets/img/brief-to-screen-800.jpg 800w, /assets/img/brief-to-screen-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="A film crew with a boom microphone records two executives in a high-rise office at sunset" fetchpriority="high" decoding="async">
+      <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
+      <span class="hero-film-cap"><b>From Brief to Screen</b> Studio film · 1:17</span>
+    </button></article></div></section>
 <section class="section tight-top" aria-label="What is included">
   <div class="wrap detail-grid">
     <div class="detail-col"><h2 class="label">What you receive</h2><ul class="ticks"><li>A launch film</li><li>Teasers and countdown edits</li><li>Campaign cut-downs</li><li>Vertical and short-form versions</li><li>Frames and stills for the wider campaign</li></ul></div>
@@ -107,19 +117,11 @@ document.documentElement.classList.add('js');
 <section class="section alt" aria-labelledby="approach-title">
   <div class="wrap approach">
     <div><p class="eyebrow">Our approach</p><h2 class="h2" id="approach-title">How we make it</h2></div>
-    <div><p class="approach-text">We design the launch film and the campaign around it at the same time, so every teaser, cut-down and still belongs to the same story.</p><ol class="steps-compact"><li><span class="num">01</span><h3 class="h3">Brief</h3><p>Understand the objective and the creative vision.</p></li><li><span class="num">02</span><h3 class="h3">Direction</h3><p>Develop the concept, treatment and storyboard.</p></li><li><span class="num">03</span><h3 class="h3">Production</h3><p>Generate, direct, edit and refine the film.</p></li><li><span class="num">04</span><h3 class="h3">Delivery</h3><p>Sound, music, grade and every agreed format.</p></li></ol><a class="link-arrow" href="/process/">The full process <span class="arr" aria-hidden="true">→</span></a></div>
+    <div><p class="approach-text">We design the launch film and the campaign around it at the same time, so every teaser, cut-down and still belongs to the same story.</p><ol class="steps-compact"><li><span class="num">01</span><h3 class="h3">Brief</h3><p>Understand the objective and the creative vision.</p></li><li><span class="num">02</span><h3 class="h3">Direction</h3><p>Develop the concept, treatment and storyboard.</p></li><li><span class="num">03</span><h3 class="h3">Production</h3><p>Direct, produce, edit and refine the film.</p></li><li><span class="num">04</span><h3 class="h3">Delivery</h3><p>Sound, music, grade and every agreed format.</p></li></ol><a class="link-arrow" href="/process/">The full process <span class="arr" aria-hidden="true">→</span></a></div>
   </div>
 </section>
-<section class="section" id="examples" aria-labelledby="ex-title">
-  <div class="wrap">
-    <div class="sec-head">
-      <div><p class="eyebrow">Examples</p><h2 class="h2" id="ex-title">Films in this category</h2></div>
-      
-    </div>
-    <div class="no-examples"><p>We are adding films in this category to our work. Tell us about your project and we will show you how we would approach it, with references and a written treatment.</p><a class="link-arrow" href="/work/">See all our work <span class="arr" aria-hidden="true">→</span></a></div>
-  </div>
-</section>
-<section class="section tight-top" aria-labelledby="other-title">
+
+<section class="section short-top" aria-labelledby="other-title">
   <div class="wrap">
     <h2 class="label" id="other-title">Other services</h2>
     <ul class="chips-links"><li><a href="/services/brand-films/">Brand Films</a></li><li><a href="/services/product-films/">Product Films</a></li><li><a href="/services/advertising-films/">Advertising Films</a></li><li><a href="/services/explainer-films/">Explainer Films</a></li><li><a href="/services/educational-films/">Educational Films</a></li><li><a href="/services/ongoing-content/">Ongoing Video Production</a></li></ul>
@@ -130,7 +132,7 @@ document.documentElement.classList.add('js');
     <h2 class="h2" id="cta-title">Planning a launch or campaign?</h2>
     <div class="cta-side">
       <p>Tell us what it needs to do and who it is for. We will reply with questions, a direction and a fixed quote.</p>
-      <div class="actions"><a class="btn light" href="/contact/?need=Launch%20or%20campaign">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
+      <div class="actions"><a class="btn inv" href="/contact/?need=Launch%20or%20campaign">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
     </div>
   </div>
 </section>
@@ -153,8 +155,9 @@ document.documentElement.classList.add('js');
   <div class="player-top"><p class="player-title" id="player-title"></p><button class="player-close" id="player-close" type="button">Close</button></div>
   <div class="stage" id="stage"></div>
 </dialog>
-
-<script src="/assets/site.js?v=2" defer></script>
+<script type="application/json" id="film-data">{"brief-to-screen":{"title":"From Brief to Screen","poster":"/assets/img/brief-to-screen-1600.jpg","src":"/videos/brief-to-screen-1080.mp4","small":"/videos/brief-to-screen-720.mp4"}}</script>
+<script src="/assets/site.js?v=3" defer></script>
 <script src="/bear.js?v=5" defer></script>
+<script>if(document.documentElement.hasAttribute("data-preview")){var s=document.createElement("script");s.src="/assets/preview.js?v=1";s.defer=true;document.body.appendChild(s)}</script>
 </body>
 </html>

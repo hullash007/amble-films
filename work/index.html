@@ -1,36 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="original-black">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Our work: selected films | Amble Films</title>
-<meta name="description" content="Selected films by Amble Films, each labelled as client work, a concept film or a visual study.">
+<title>Our work: brand, advertising and educational films | Amble Films</title>
+<meta name="description" content="Films by Amble Films, each labelled as client work, a studio film or a concept: brand, product, advertising, explainer and educational films.">
 <meta name="theme-color" content="#F5F1EA">
 <script>
 if (location.hostname === 'hullash007.github.io') location.replace('https://amblefilms.in' + location.pathname.replace(/^\/amble-films/, '') + location.search + location.hash);
-document.documentElement.classList.add('js');
+(function(){var T=["original-black","warm-dark","light-cream"],t="original-black",h=location.hostname,d=document.documentElement;
+var p=true&&(/^(localhost|127\.0\.0\.1)$/.test(h)||/--amble-films\.netlify\.app$/.test(h));
+if(p){try{var q=new URLSearchParams(location.search).get("theme");if(T.indexOf(q)>-1){localStorage.setItem("amble-theme",q);t=q}else{var s=localStorage.getItem("amble-theme");if(T.indexOf(s)>-1)t=s}}catch(e){}d.setAttribute("data-preview","")}
+d.setAttribute("data-theme",t);d.classList.add("js")})();
 </script>
 <link rel="canonical" href="https://amblefilms.in/work/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Amble Films">
+<meta property="og:locale" content="en_IN">
 <meta property="og:url" content="https://amblefilms.in/work/">
-<meta property="og:title" content="Our work: selected films | Amble Films">
-<meta property="og:description" content="Selected films by Amble Films, each labelled as client work, a concept film or a visual study.">
-<meta property="og:image" content="https://amblefilms.in/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Amble Films logo, a bear walking along the top of the word Amble">
+<meta property="og:title" content="Our work: brand, advertising and educational films | Amble Films">
+<meta property="og:description" content="Films by Amble Films, each labelled as client work, a studio film or a concept: brand, product, advertising, explainer and educational films.">
+<meta property="og:image" content="https://amblefilms.in/assets/img/after-hours-1600.jpg">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="900">
+<meta property="og:image:alt" content="A cinema camera on a dolly track films a woman in a red gown on a candlelit set">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Our work: selected films | Amble Films">
-<meta name="twitter:description" content="Selected films by Amble Films, each labelled as client work, a concept film or a visual study.">
-<meta name="twitter:image" content="https://amblefilms.in/og-image.png">
+<meta name="twitter:title" content="Our work: brand, advertising and educational films | Amble Films">
+<meta name="twitter:description" content="Films by Amble Films, each labelled as client work, a studio film or a concept: brand, product, advertising, explainer and educational films.">
+<meta name="twitter:image" content="https://amblefilms.in/assets/img/after-hours-1600.jpg">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/hanken-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=4">
+<link rel="stylesheet" href="/assets/site.css?v=5">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://amblefilms.in/"},{"@type":"ListItem","position":2,"name":"Work","item":"https://amblefilms.in/work/"}]}</script>
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
@@ -62,7 +66,7 @@ document.documentElement.classList.add('js');
     </nav>
     <div class="bar-end">
       <a class="btn small nav-cta" href="/contact/">Start a project</a>
-      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span>Menu</span></button>
+      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span class="menu-word">Menu</span></button>
     </div>
   </div>
 </header>
@@ -92,52 +96,111 @@ document.documentElement.classList.add('js');
   <div class="wrap">
     
     <p class="eyebrow">Our work</p>
-    <h1 class="h1">Selected films.</h1>
-    <p class="lead">Every film is labelled, so you always know whether you are watching work made for a client, a concept film or a visual study.</p>
+    <h1 class="h1">Films that do the talking.</h1>
+    <p class="lead">Every film is labelled, so you always know whether you are watching work made for a client, a film made for our own studio or a concept.</p>
     
   </div>
 </section>
-<section class="section tight-top" aria-labelledby="films-title">
+<section class="section tight-top" id="films" aria-labelledby="films-title">
   <div class="wrap">
     <h2 class="sr-only" id="films-title">All films</h2>
-    <div class="work-bar"><p class="legend"><span><b>Client film</b> made for a client</span></p></div>
+    <div class="work-bar"><div class="filters" role="group" aria-label="Filter films by category">
+      <button type="button" data-filter="all" aria-pressed="true">All films</button>
+      <button type="button" data-filter="brand" aria-pressed="false">Brand films</button>
+      <button type="button" data-filter="education" aria-pressed="false">Education</button>
+    </div><p class="legend"><span><b>Client film</b> made for a client</span><span><b>Studio film</b> made by Amble Films for its own brand</span></p></div>
     <div class="film-grid work" data-film-grid>
-      <article class="film" data-film="latitudes" data-cat="education" data-lang="en">
-  <button class="film-media" type="button" data-play aria-label="Play Latitudes">
-    <img src="/assets/img/latitudes-800.jpg" srcset="/assets/img/latitudes-800.jpg 800w, /assets/img/latitudes-1600.jpg 1600w" sizes="(max-width: 760px) 100vw, 50vw" width="1600" height="900" alt="A teacher and a student beside a glowing globe marked with coordinates" fetchpriority="high" decoding="async">
+      <article class="film film-lead" data-film="after-hours" data-cat="brand" data-kind="studio">
+  <button class="film-media" type="button" data-play aria-label="Play After Hours, 1:11">
+    <img src="/assets/img/after-hours-800.jpg" srcset="/assets/img/after-hours-800.jpg 800w, /assets/img/after-hours-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="A cinema camera on a dolly track films a woman in a red gown on a candlelit set" fetchpriority="high" decoding="async">
     <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
+    <span class="len" aria-hidden="true">1:11</span>
   </button>
   <div class="film-cap">
-    <p class="tags"><span>Education</span><span>Client film</span></p>
-    <h3 class="h3">Latitudes</h3>
-    <p class="meta">Locating Places on the Earth, Part 2 · For an online school</p>
-    <div class="film-row"><div class="langs" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">English</button><button type="button" data-lang="hi" aria-pressed="false">Hindi</button></div><span class="meta len" data-length>4:20 · English</span></div>
+    <p class="tags"><span>Brand films</span><span class="kind kind-studio">Studio film</span></p>
+    <h3 class="h3">After Hours</h3>
+    
+    <p class="film-sum">One night in the studio as a fragrance, a watch and a car commercial take shape, from the first sketch to the final review.</p>
   </div>
 </article>
-      <article class="film" data-film="longitudes" data-cat="education" data-lang="en">
-  <button class="film-media" type="button" data-play aria-label="Play Longitudes and the Prime Meridian">
-    <img src="/assets/img/longitudes-800.jpg" srcset="/assets/img/longitudes-800.jpg 800w, /assets/img/longitudes-1600.jpg 1600w" sizes="(max-width: 760px) 100vw, 50vw" width="1600" height="900" alt="A teacher points across a valley at sunset while a student holds a compass" loading="lazy" decoding="async">
+      <article class="film" data-film="brief-to-screen" data-cat="brand" data-kind="studio">
+  <button class="film-media" type="button" data-play aria-label="Play From Brief to Screen, 1:17">
+    <img src="/assets/img/brief-to-screen-800.jpg" srcset="/assets/img/brief-to-screen-800.jpg 800w, /assets/img/brief-to-screen-1600.jpg 1600w" sizes="(max-width: 860px) 100vw, 50vw" width="1600" height="900" alt="A film crew with a boom microphone records two executives in a high-rise office at sunset" loading="lazy" decoding="async">
     <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
+    <span class="len" aria-hidden="true">1:17</span>
   </button>
   <div class="film-cap">
-    <p class="tags"><span>Education</span><span>Client film</span></p>
+    <p class="tags"><span>Brand films</span><span class="kind kind-studio">Studio film</span></p>
+    <h3 class="h3">From Brief to Screen</h3>
+    
+    <p class="film-sum">A business owner's idea becomes a finished campaign: the brief, the creative session, the shoot, the grade and the handshake.</p>
+  </div>
+</article>
+      <article class="film" data-film="latitudes" data-cat="education" data-kind="client">
+  <button class="film-media" type="button" data-play aria-label="Play Latitudes, 4:20">
+    <img src="/assets/img/latitudes-800.jpg" srcset="/assets/img/latitudes-800.jpg 800w, /assets/img/latitudes-1600.jpg 1600w" sizes="(max-width: 860px) 100vw, 50vw" width="1600" height="900" alt="A teacher and a student beside a glowing globe marked with coordinates" loading="lazy" decoding="async">
+    <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
+    <span class="len" aria-hidden="true">4:20</span>
+  </button>
+  <div class="film-cap">
+    <p class="tags"><span>Education</span><span class="kind kind-client">Client film</span></p>
+    <h3 class="h3">Latitudes</h3>
+    <p class="meta">Locating Places on the Earth, Part 2 · For an online school</p>
+    <p class="film-sum">A recurring cast of teacher and students explains lines of latitude, from a glowing globe to the Equator itself.</p>
+  </div>
+</article>
+      <article class="film" data-film="longitudes" data-cat="education" data-kind="client">
+  <button class="film-media" type="button" data-play aria-label="Play Longitudes and the Prime Meridian, 5:02">
+    <img src="/assets/img/longitudes-800.jpg" srcset="/assets/img/longitudes-800.jpg 800w, /assets/img/longitudes-1600.jpg 1600w" sizes="(max-width: 860px) 100vw, 50vw" width="1600" height="900" alt="A teacher points across a valley at sunset while a student holds a compass" loading="lazy" decoding="async">
+    <span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span>
+    <span class="len" aria-hidden="true">5:02</span>
+  </button>
+  <div class="film-cap">
+    <p class="tags"><span>Education</span><span class="kind kind-client">Client film</span></p>
     <h3 class="h3">Longitudes and the Prime Meridian</h3>
     <p class="meta">Locating Places on the Earth, Part 3 · For an online school</p>
-    <div class="film-row"><div class="langs" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">English</button><button type="button" data-lang="hi" aria-pressed="false">Hindi</button></div><span class="meta len" data-length>5:02 · English</span></div>
+    <p class="film-sum">The same cast travels from a valley at sunset to Greenwich to show how longitude and time are measured.</p>
   </div>
 </article>
     </div>
-    <p class="empty" data-empty hidden>No films in this category yet.</p>
   </div>
 </section>
-<section class="section alt" aria-labelledby="showreel-title">
+<section class="section alt" aria-labelledby="cats-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">What we make</p><h2 class="h2" id="cats-title">Six kinds of film</h2></div>
+      <div class="sec-aside"><p class="lead">Our portfolio is growing. Where a category has no film of ours yet, we say so plainly.</p></div>
+    </div>
+    <ul class="cat-grid">
+      <li class="cat"><button class="cat-media" type="button" data-filter-to="brand" aria-label="Show Brand films"><img src="/assets/img/brief-to-screen-800.jpg" width="800" height="450" alt="A film crew with a boom microphone records two executives in a high-rise office at sunset" loading="lazy" decoding="async"></button><div class="cat-body"><p class="cat-status">2 films above</p><h3 class="h3">Brand films</h3><p>Films that carry what a company believes, in a form people actually watch.</p><button class="link-arrow" type="button" data-filter-to="brand">Watch brand films <span class="arr" aria-hidden="true">→</span></button></div></li>
+      <li class="cat"><figure class="stock still-only">
+    
+    <img src="/assets/img/stock/smoke-800.jpg" srcset="/assets/img/stock/smoke-800.jpg 800w, /assets/img/stock/smoke-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="A thin ribbon of smoke curling through darkness" loading="lazy" decoding="async">
+    <figcaption>Illustrative footage: licensed stock, graded by Amble Films. Not client work.</figcaption>
+  </figure><div class="cat-body"><h3 class="h3">Product films</h3><p>Products shown in light, scale and settings a physical shoot rarely reaches, checked shot by shot for accuracy.</p><a class="link-arrow" href="/services/product-films/">Product Films: what you receive <span class="arr" aria-hidden="true">→</span></a></div></li>
+      <li class="cat"><figure class="stock still-only">
+    
+    <img src="/assets/img/stock/inks-800.jpg" srcset="/assets/img/stock/inks-800.jpg 800w, /assets/img/stock/inks-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="Clouds of orange, blue and cream ink colliding in liquid" loading="lazy" decoding="async">
+    <figcaption>Illustrative footage: licensed stock, graded by Amble Films. Not client work.</figcaption>
+  </figure><div class="cat-body"><h3 class="h3">Advertising</h3><p>Commercials from six seconds to sixty, built on one clear idea and cut to every platform.</p><a class="link-arrow" href="/services/advertising-films/">Advertising Films: what you receive <span class="arr" aria-hidden="true">→</span></a></div></li>
+      <li class="cat"><div class="cat-media"><img src="/assets/img/latitudes-800.jpg" width="800" height="450" alt="A teacher and a student beside a glowing globe marked with coordinates" loading="lazy" decoding="async"><span class="cat-note">Related film: Latitudes</span></div><div class="cat-body"><p class="cat-status">Shown in our client films</p><h3 class="h3">Explainers</h3><p>Complex ideas made clear in minutes, one step and one picture at a time.</p><a class="link-arrow" href="/services/explainer-films/">Explainer Films: what you receive <span class="arr" aria-hidden="true">→</span></a></div></li>
+      <li class="cat"><button class="cat-media" type="button" data-filter-to="education" aria-label="Show Education"><img src="/assets/img/longitudes-800.jpg" width="800" height="450" alt="A teacher points across a valley at sunset while a student holds a compass" loading="lazy" decoding="async"></button><div class="cat-body"><p class="cat-status">2 films above</p><h3 class="h3">Education</h3><p>Chapter-by-chapter lesson films with a recurring cast, scripted from your syllabus.</p><button class="link-arrow" type="button" data-filter-to="education">Watch education <span class="arr" aria-hidden="true">→</span></button></div></li>
+      <li class="cat"><figure class="stock still-only">
+    
+    <img src="/assets/img/stock/confetti-800.jpg" srcset="/assets/img/stock/confetti-800.jpg 800w, /assets/img/stock/confetti-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="Metallic confetti falling through darkness" loading="lazy" decoding="async">
+    <figcaption>Illustrative footage: licensed stock, graded by Amble Films. Not client work.</figcaption>
+  </figure><div class="cat-body"><h3 class="h3">Creative concepts</h3><p>Speculative films we make to explore an idea, a look or a technique before a client needs it.</p><a class="link-arrow" href="/contact/?need=Not%20sure%20yet">Explore an idea with us <span class="arr" aria-hidden="true">→</span></a></div></li>
+    </ul>
+  </div>
+</section>
+<section class="section" aria-labelledby="showreel-title">
   <div class="wrap">
     <div class="sec-head">
       <div><p class="eyebrow">Showreel</p><h2 class="h2" id="showreel-title">Moments from our films</h2></div>
       
     </div>
     <figure class="reel">
-    <video data-reel data-large="/videos/reel-1080.mp4" data-small="/videos/reel-720.mp4" poster="/assets/img/reel-poster.jpg" muted loop playsinline preload="none" aria-hidden="true" width="1920" height="1080"></video>
+    <video data-reel data-large="/videos/reel-studio-1080.mp4" data-small="/videos/reel-studio-720.mp4" poster="/assets/img/reel-studio-poster.jpg" muted loop playsinline preload="none" aria-hidden="true" width="1920" height="1080"></video>
     <button class="reel-btn" type="button" data-play-reel><span class="play" aria-hidden="true"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg></span><span>Watch the reel</span></button>
   </figure>
   </div>
@@ -147,7 +210,7 @@ document.documentElement.classList.add('js');
     <h2 class="h2" id="cta-title">Looking for something specific?</h2>
     <div class="cta-side">
       <p>Tell us about your project and we will show you how we would approach it.</p>
-      <div class="actions"><a class="btn light" href="/contact/">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
+      <div class="actions"><a class="btn inv" href="/contact/">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
     </div>
   </div>
 </section>
@@ -170,8 +233,9 @@ document.documentElement.classList.add('js');
   <div class="player-top"><p class="player-title" id="player-title"></p><button class="player-close" id="player-close" type="button">Close</button></div>
   <div class="stage" id="stage"></div>
 </dialog>
-<script type="application/json" id="film-data">{"latitudes":{"title":"Latitudes · Locating Places on the Earth, Part 2","poster":"/assets/img/latitudes-1600.jpg","versions":[{"lang":"en","label":"English","src":"/videos/latitudes-en.mp4","length":"4:20"},{"lang":"hi","label":"Hindi","src":"/videos/latitudes-hi.mp4","length":"4:49"}]},"longitudes":{"title":"Longitudes and the Prime Meridian · Locating Places on the Earth, Part 3","poster":"/assets/img/longitudes-1600.jpg","versions":[{"lang":"en","label":"English","src":"/videos/longitudes-en.mp4","length":"5:02"},{"lang":"hi","label":"Hindi","src":"/videos/longitudes-hi.mp4","length":"5:12"}]}}</script><script type="application/json" id="reel-data">{"title":"Amble Films showreel","poster":"/assets/img/reel-poster.jpg","large":"/videos/reel-1080.mp4","small":"/videos/reel-720.mp4","alt":"Moments from Amble Films productions"}</script>
-<script src="/assets/site.js?v=2" defer></script>
+<script type="application/json" id="film-data">{"after-hours":{"title":"After Hours","poster":"/assets/img/after-hours-1600.jpg","src":"/videos/after-hours-1080.mp4","small":"/videos/after-hours-720.mp4"},"brief-to-screen":{"title":"From Brief to Screen","poster":"/assets/img/brief-to-screen-1600.jpg","src":"/videos/brief-to-screen-1080.mp4","small":"/videos/brief-to-screen-720.mp4"},"latitudes":{"title":"Latitudes · Locating Places on the Earth, Part 2","poster":"/assets/img/latitudes-1600.jpg","src":"/videos/latitudes-en.mp4","small":"/videos/latitudes-en.mp4"},"longitudes":{"title":"Longitudes and the Prime Meridian · Locating Places on the Earth, Part 3","poster":"/assets/img/longitudes-1600.jpg","src":"/videos/longitudes-en.mp4","small":"/videos/longitudes-en.mp4"}}</script><script type="application/json" id="reel-data">{"title":"Amble Films showreel","poster":"/assets/img/reel-studio-poster.jpg","large":"/videos/reel-studio-1080.mp4","small":"/videos/reel-studio-720.mp4","alt":"Moments from Amble Films productions: a film set, a watch commercial, a lesson film and a colour grading suite"}</script>
+<script src="/assets/site.js?v=3" defer></script>
 <script src="/bear.js?v=5" defer></script>
+<script>if(document.documentElement.hasAttribute("data-preview")){var s=document.createElement("script");s.src="/assets/preview.js?v=1";s.defer=true;document.body.appendChild(s)}</script>
 </body>
 </html>

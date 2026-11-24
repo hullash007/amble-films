@@ -38,14 +38,15 @@ $$("[data-sub]").forEach(box => {
   document.addEventListener("click", e => { if (!box.contains(e.target)) set(false); });
 });
 
-/* ---------- Reel preview: muted, loads only when on screen, never with reduced motion or Data Saver ---------- */
+/* ---------- Reel and illustrative loops: muted, load only when on screen, never with reduced motion or Data Saver ---------- */
 const saver = navigator.connection && navigator.connection.saveData;
-$$("video[data-reel]").forEach(v => {
+const phone = () => matchMedia("(max-width: 860px)").matches;
+$$("video[data-reel], video[data-ambient]").forEach(v => {
   if (calm || saver || !("IntersectionObserver" in window)) return;   // the poster frame stays
   let loaded = false;
   new IntersectionObserver(([e]) => {
     if (e.isIntersecting) {
-      if (!loaded) { v.src = matchMedia("(max-width: 860px)").matches ? v.dataset.small : v.dataset.large; loaded = true; }
+      if (!loaded) { v.src = phone() ? v.dataset.small : v.dataset.large; loaded = true; }
       v.muted = true; v.play().catch(() => {});
     } else if (loaded) v.pause();
   }, { threshold: .2 }).observe(v);
@@ -74,23 +75,13 @@ if (player) {
   player.addEventListener("close", () => { stage.innerHTML = ""; if (opener) opener.focus(); });
 }
 $$("[data-play-reel]").forEach(b => b.addEventListener("click", () => {
-  if (REEL) play(REEL.title, matchMedia("(max-width: 860px)").matches ? REEL.small : REEL.large, REEL.poster);
+  if (REEL) play(REEL.title, phone() ? REEL.small : REEL.large, REEL.poster);
 }));
 
-/* ---------- Film cards: language switch and play ---------- */
+/* ---------- Film cards: play (phones get the lighter file where there is one) ---------- */
 $$("[data-film]").forEach(card => {
   const film = FILMS[card.dataset.film]; if (!film) return;
-  const version = () => film.versions.find(v => v.lang === card.dataset.lang) || film.versions[0];
-  $$(".langs button", card).forEach(b => b.addEventListener("click", () => {
-    card.dataset.lang = b.dataset.lang;
-    $$(".langs button", card).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-    const v = version(), len = $("[data-length]", card);
-    if (len) len.textContent = v.length + " · " + v.label;
-  }));
-  $$("[data-play]", card).forEach(b => b.addEventListener("click", () => {
-    const v = version();
-    play(film.title + (film.versions.length > 1 ? " (" + v.label + ")" : ""), v.src, film.poster);
-  }));
+  $$("[data-play]", card).forEach(b => b.addEventListener("click", () => play(film.title, phone() ? film.small : film.src, film.poster)));
 });
 
 /* ---------- Work page filters ---------- */
@@ -100,7 +91,12 @@ $$("[data-filter]").forEach(b => b.addEventListener("click", () => {
   $$("[data-filter]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
   let shown = 0;
   $$("[data-film]", grid).forEach(c => { const on = cat === "all" || c.dataset.cat === cat; c.hidden = !on; if (on) shown++; });
-  const empty = $("[data-empty]"); if (empty) empty.hidden = shown > 0;
+  $$("[data-film]", grid).filter(c => !c.hidden).forEach((c, i) => c.classList.toggle("film-lead", i === 0 && cat === "all"));
+}));
+// Category cards further down the Work page jump back up to the films, filtered
+$$("[data-filter-to]").forEach(b => b.addEventListener("click", () => {
+  const f = $('[data-filter="' + b.dataset.filterTo + '"]'); if (f) f.click();
+  const top = $("#films"); if (top) top.scrollIntoView({ behavior: calm ? "auto" : "smooth" });
 }));
 
 /* ---------- Enquiry form: three short steps, sent through FormSubmit ---------- */

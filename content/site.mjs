@@ -10,19 +10,38 @@ export const SITE = {
   founder: { name: "Ajit", role: "Founder & Creative Director" },
   social: { youtube: "https://www.youtube.com/@AmbleFilms", instagram: "https://www.instagram.com/amble_films/", linkedin: "https://www.linkedin.com/company/amblefilms/" },
   tagline: "Cinematic films for brands, products and ideas.",
-  description: "Amble Films is a film studio making brand, product, advertising, explainer and educational films for organisations anywhere. Directed by people, produced with AI."
+  description: "Amble Films makes cinematic brand, product, advertising, explainer and educational films for organisations anywhere, with creative direction from the first brief to the final cut."
 };
 
 // Labels used on the Work page and on film cards
 export const CATEGORIES = {
-  brand: "Brand", product: "Product", advertising: "Advertising",
-  explainer: "Explainers", education: "Education", experiments: "Creative experiments"
+  brand: "Brand films", product: "Product films", advertising: "Advertising",
+  explainer: "Explainers", education: "Education", concepts: "Creative concepts"
+};
+// One line per category for the Work page. `service` links to the matching service page.
+// `visual` names a licensed stock loop in /videos/stock (see docs/stock-asset-licenses.md), shown only while the category has no films of its own.
+export const CATEGORY_INTROS = {
+  brand: { line: "Films that carry what a company believes, in a form people actually watch.", service: "brand-films", visual: "bokeh" },
+  product: { line: "Products shown in light, scale and settings a physical shoot rarely reaches, checked shot by shot for accuracy.", service: "product-films", visual: "smoke" },
+  advertising: { line: "Commercials from six seconds to sixty, built on one clear idea and cut to every platform.", service: "advertising-films", visual: "inks" },
+  explainer: { line: "Complex ideas made clear in minutes, one step and one picture at a time.", service: "explainer-films" },
+  education: { line: "Chapter-by-chapter lesson films with a recurring cast, scripted from your syllabus.", service: "educational-films" },
+  concepts: { line: "Speculative films we make to explore an idea, a look or a technique before a client needs it.", service: null, visual: "confetti" }
 };
 export const KINDS = {
   client: { label: "Client film", note: "made for a client" },
+  studio: { label: "Studio film", note: "made by Amble Films for its own brand" },
   concept: { label: "Concept film", note: "a speculative film made to explore an idea" },
   study: { label: "Study", note: "a short visual experiment" }
 };
+// Licensed stock loops (Mixkit Stock Video Free License, graded by Amble Films). Every use is labelled on the page.
+export const STOCK = {
+  bokeh: { alt: "Soft out-of-focus lights drifting on a dark background" },
+  smoke: { alt: "A thin ribbon of smoke curling through darkness" },
+  inks: { alt: "Clouds of orange, blue and cream ink colliding in liquid" },
+  confetti: { alt: "Metallic confetti falling through darkness" }
+};
+export const STOCK_NOTE = "Illustrative footage: licensed stock, graded by Amble Films. Not client work.";
 
 export const SERVICES = [
   {
@@ -81,9 +100,9 @@ export const SERVICES = [
     lead: "Chapter-by-chapter lesson films for schools, colleges, coaching centres, learning platforms and course creators. A recurring cast carries the series, so a subject feels like one course.",
     receive: ["Scripts written from your syllabus, textbook or notes", "Recurring characters across the whole series", "Narration in one or more languages", "Accuracy review at script and at cut", "A consistent look from chapter to chapter"],
     uses: ["Schools and colleges", "Coaching and test-preparation centres", "Learning platforms and apps", "Online course creators", "Publishers adapting textbooks", "Corporate learning"],
-    deliver: ["Lesson parts of 4 to 10 minutes", "A series of parts for each chapter", "English, Hindi and other languages on request", "Short revision clips", "Masters up to 4K"],
+    deliver: ["Lesson parts of 4 to 10 minutes", "A series of parts for each chapter", "Narration in English; other languages on request", "Short revision clips", "Masters up to 4K"],
     approach: "Accuracy comes first. We script from your material, you approve the script and storyboard before anything is made, and your subject experts review the cuts before we finish.",
-    meta: "Educational and lesson films for schools, colleges, coaching centres, learning platforms and course creators, in English, Hindi and more."
+    meta: "Educational and lesson films for schools, colleges, coaching centres, learning platforms and course creators: scripted from your syllabus, with a recurring cast and a consistent look."
   },
   {
     slug: "launch-campaign-films", name: "Launch Films & Campaign Content", short: "Launch & Campaign", need: "Launch or campaign", category: "advertising",
@@ -98,7 +117,7 @@ export const SERVICES = [
     meta: "Launch films and campaign content: a hero launch film, teasers and cut-downs from one creative world, for every platform."
   },
   {
-    slug: "ongoing-content", name: "Ongoing Video Production", short: "Ongoing Production", need: "Ongoing production", category: null,
+    slug: "ongoing-content", name: "Ongoing Video Production", short: "Ongoing Production", need: "Ongoing production", category: null, visual: "bokeh",
     line: "A steady run of films in one consistent look.",
     title: "Ongoing video production",
     h1: "A steady run of films, in one consistent look.",
@@ -145,8 +164,8 @@ export const STEPS = [
   { name: "Direction", line: "Develop the concept, treatment and storyboard.",
     text: "We develop the concept and return a written treatment, a storyboard, a timeline and a fixed quote.",
     you: "Your notes on the direction.", get: "The plan and the full price, approved before production starts." },
-  { name: "Production", line: "Generate, direct, edit and refine the film.",
-    text: "We generate, direct and select every shot, edit the film and share cuts as it takes shape.",
+  { name: "Production", line: "Direct, produce, edit and refine the film.",
+    text: "We direct and select every shot, edit the film and share cuts as it takes shape.",
     you: "Timed notes on each cut, within the agreed rounds.", get: "Cuts to review, and changes made from your notes." },
   { name: "Delivery", line: "Sound, music, grade and every agreed format.",
     text: "Sound design, music, voice and colour grade, then final masters in the formats you need.",
@@ -157,7 +176,7 @@ export const FAQ = [
   ["Will the film look obviously made by AI?", "We direct every shot and discard most of what the tools generate, then edit, grade and mix the film by hand. Watch the films on this site and judge for yourself."],
   ["Can the same characters appear across a series?", "Yes. We keep characters, settings and style consistent from film to film, so a series feels like one piece of work."],
   ["How do you make sure the content is accurate?", "We script from your material. You approve the script and storyboard before anything is produced, and you review cuts before we finish."],
-  ["Which languages do you work in?", "We have delivered films in English and in Hindi, each version timed to its own narration. Ask us about other languages."],
+  ["Which languages do you work in?", "Our films are narrated in English. If you need another language, tell us in the brief and we will plan the versions with you."],
   ["How much does a film cost?", "Every project gets a fixed quote after the brief, so you know the full cost before work starts. You can share a budget range in the enquiry form if you would like us to plan around it."],
   ["How long does it take?", "That depends on the length and the number of films. Your timeline comes with the fixed quote, before anything begins."],
   ["Where can we use the finished film?", "Tell us where it will run, whether that is your website, YouTube, paid ads, a classroom or an event, and the usage is written into your quote."],

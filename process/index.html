@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="original-black">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,11 +8,15 @@
 <meta name="theme-color" content="#F5F1EA">
 <script>
 if (location.hostname === 'hullash007.github.io') location.replace('https://amblefilms.in' + location.pathname.replace(/^\/amble-films/, '') + location.search + location.hash);
-document.documentElement.classList.add('js');
+(function(){var T=["original-black","warm-dark","light-cream"],t="original-black",h=location.hostname,d=document.documentElement;
+var p=true&&(/^(localhost|127\.0\.0\.1)$/.test(h)||/--amble-films\.netlify\.app$/.test(h));
+if(p){try{var q=new URLSearchParams(location.search).get("theme");if(T.indexOf(q)>-1){localStorage.setItem("amble-theme",q);t=q}else{var s=localStorage.getItem("amble-theme");if(T.indexOf(s)>-1)t=s}}catch(e){}d.setAttribute("data-preview","")}
+d.setAttribute("data-theme",t);d.classList.add("js")})();
 </script>
 <link rel="canonical" href="https://amblefilms.in/process/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Amble Films">
+<meta property="og:locale" content="en_IN">
 <meta property="og:url" content="https://amblefilms.in/process/">
 <meta property="og:title" content="Our process | Amble Films">
 <meta property="og:description" content="How Amble Films makes a film: brief, direction, production and delivery, with your input and approval at every stage.">
@@ -30,8 +34,8 @@ document.documentElement.classList.add('js');
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/marcellus-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/hanken-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=4">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Will the film look obviously made by AI?","acceptedAnswer":{"@type":"Answer","text":"We direct every shot and discard most of what the tools generate, then edit, grade and mix the film by hand. Watch the films on this site and judge for yourself."}},{"@type":"Question","name":"Can the same characters appear across a series?","acceptedAnswer":{"@type":"Answer","text":"Yes. We keep characters, settings and style consistent from film to film, so a series feels like one piece of work."}},{"@type":"Question","name":"How do you make sure the content is accurate?","acceptedAnswer":{"@type":"Answer","text":"We script from your material. You approve the script and storyboard before anything is produced, and you review cuts before we finish."}},{"@type":"Question","name":"Which languages do you work in?","acceptedAnswer":{"@type":"Answer","text":"We have delivered films in English and in Hindi, each version timed to its own narration. Ask us about other languages."}},{"@type":"Question","name":"How much does a film cost?","acceptedAnswer":{"@type":"Answer","text":"Every project gets a fixed quote after the brief, so you know the full cost before work starts. You can share a budget range in the enquiry form if you would like us to plan around it."}},{"@type":"Question","name":"How long does it take?","acceptedAnswer":{"@type":"Answer","text":"That depends on the length and the number of films. Your timeline comes with the fixed quote, before anything begins."}},{"@type":"Question","name":"Where can we use the finished film?","acceptedAnswer":{"@type":"Answer","text":"Tell us where it will run, whether that is your website, YouTube, paid ads, a classroom or an event, and the usage is written into your quote."}},{"@type":"Question","name":"Do you work with clients outside India?","acceptedAnswer":{"@type":"Answer","text":"Yes. We work remotely, so it makes no difference where you are. Briefs, reviews and approvals happen over calls and shared review links."}}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://amblefilms.in/"},{"@type":"ListItem","position":2,"name":"Process","item":"https://amblefilms.in/process/"}]}</script>
+<link rel="stylesheet" href="/assets/site.css?v=5">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Will the film look obviously made by AI?","acceptedAnswer":{"@type":"Answer","text":"We direct every shot and discard most of what the tools generate, then edit, grade and mix the film by hand. Watch the films on this site and judge for yourself."}},{"@type":"Question","name":"Can the same characters appear across a series?","acceptedAnswer":{"@type":"Answer","text":"Yes. We keep characters, settings and style consistent from film to film, so a series feels like one piece of work."}},{"@type":"Question","name":"How do you make sure the content is accurate?","acceptedAnswer":{"@type":"Answer","text":"We script from your material. You approve the script and storyboard before anything is produced, and you review cuts before we finish."}},{"@type":"Question","name":"Which languages do you work in?","acceptedAnswer":{"@type":"Answer","text":"Our films are narrated in English. If you need another language, tell us in the brief and we will plan the versions with you."}},{"@type":"Question","name":"How much does a film cost?","acceptedAnswer":{"@type":"Answer","text":"Every project gets a fixed quote after the brief, so you know the full cost before work starts. You can share a budget range in the enquiry form if you would like us to plan around it."}},{"@type":"Question","name":"How long does it take?","acceptedAnswer":{"@type":"Answer","text":"That depends on the length and the number of films. Your timeline comes with the fixed quote, before anything begins."}},{"@type":"Question","name":"Where can we use the finished film?","acceptedAnswer":{"@type":"Answer","text":"Tell us where it will run, whether that is your website, YouTube, paid ads, a classroom or an event, and the usage is written into your quote."}},{"@type":"Question","name":"Do you work with clients outside India?","acceptedAnswer":{"@type":"Answer","text":"Yes. We work remotely, so it makes no difference where you are. Briefs, reviews and approvals happen over calls and shared review links."}}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://amblefilms.in/"},{"@type":"ListItem","position":2,"name":"Process","item":"https://amblefilms.in/process/"}]}</script>
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="bar">
@@ -62,7 +66,7 @@ document.documentElement.classList.add('js');
     </nav>
     <div class="bar-end">
       <a class="btn small nav-cta" href="/contact/">Start a project</a>
-      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span>Menu</span></button>
+      <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span class="menu-word">Menu</span></button>
     </div>
   </div>
 </header>
@@ -112,7 +116,7 @@ document.documentElement.classList.add('js');
       </li>
       <li>
         <span class="num">03</span>
-        <div class="stage-main"><h2 class="h2">Production</h2><p>We generate, direct and select every shot, edit the film and share cuts as it takes shape.</p></div>
+        <div class="stage-main"><h2 class="h2">Production</h2><p>We direct and select every shot, edit the film and share cuts as it takes shape.</p></div>
         <dl class="stage-io"><div><dt>Your input</dt><dd>Timed notes on each cut, within the agreed rounds.</dd></div><div><dt>You receive</dt><dd>Cuts to review, and changes made from your notes.</dd></div></dl>
       </li>
       <li>
@@ -123,14 +127,29 @@ document.documentElement.classList.add('js');
     </ol>
   </div>
 </section>
-<section class="section alt" aria-labelledby="faq-title">
+<section class="section preview-first alt" aria-labelledby="pf-title">
+  <div class="wrap pf-in">
+    <div class="pf-head">
+      <p class="eyebrow">Before you commit</p>
+      <h2 class="h2" id="pf-title">See the direction before you commit.</h2>
+      <p class="lead">We start by understanding what your film needs to achieve, then develop a creative direction that shows how it could come together: the idea, the look and the feel. You review the approach before full production begins.</p>
+      <div class="actions"><a class="btn" href="/contact/">Discuss your project</a><a class="link-arrow" href="/process/">How we work <span class="arr" aria-hidden="true">→</span></a></div>
+    </div>
+    <ol class="pf-steps">
+      <li><span class="num">01</span><h3 class="h3">Your objective, understood</h3><p>One conversation about what the film must do, who must watch it and where it will run.</p></li>
+      <li><span class="num">02</span><h3 class="h3">A direction you can see</h3><p>The idea, references and look for your film, shaped into something you can react to rather than imagine.</p></li>
+      <li><span class="num">03</span><h3 class="h3">Production when it feels right</h3><p>Full production starts once you are confident in the approach, with the plan and the price agreed first.</p></li>
+    </ol>
+  </div>
+</section>
+<section class="section" aria-labelledby="faq-title">
   <div class="wrap faq-layout">
     <div><p class="eyebrow">Questions</p><h2 class="h2" id="faq-title">What clients ask before they start</h2></div>
     <div class="faq">
       <details><summary>Will the film look obviously made by AI?</summary><p>We direct every shot and discard most of what the tools generate, then edit, grade and mix the film by hand. Watch the films on this site and judge for yourself.</p></details>
       <details><summary>Can the same characters appear across a series?</summary><p>Yes. We keep characters, settings and style consistent from film to film, so a series feels like one piece of work.</p></details>
       <details><summary>How do you make sure the content is accurate?</summary><p>We script from your material. You approve the script and storyboard before anything is produced, and you review cuts before we finish.</p></details>
-      <details><summary>Which languages do you work in?</summary><p>We have delivered films in English and in Hindi, each version timed to its own narration. Ask us about other languages.</p></details>
+      <details><summary>Which languages do you work in?</summary><p>Our films are narrated in English. If you need another language, tell us in the brief and we will plan the versions with you.</p></details>
       <details><summary>How much does a film cost?</summary><p>Every project gets a fixed quote after the brief, so you know the full cost before work starts. You can share a budget range in the enquiry form if you would like us to plan around it.</p></details>
       <details><summary>How long does it take?</summary><p>That depends on the length and the number of films. Your timeline comes with the fixed quote, before anything begins.</p></details>
       <details><summary>Where can we use the finished film?</summary><p>Tell us where it will run, whether that is your website, YouTube, paid ads, a classroom or an event, and the usage is written into your quote.</p></details>
@@ -143,7 +162,7 @@ document.documentElement.classList.add('js');
     <h2 class="h2" id="cta-title">Have a story, a product or an idea that deserves a film?</h2>
     <div class="cta-side">
       <p>Tell us what the film needs to do. We will reply with questions, a direction and a fixed quote.</p>
-      <div class="actions"><a class="btn light" href="/contact/">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
+      <div class="actions"><a class="btn inv" href="/contact/">Start a project</a><a class="link-arrow on-dark" data-wa href="https://wa.me/918750759538?text=Hi%20Amble%20Films%2C%20I'd%20like%20to%20talk%20about%20a%20film." target="_blank" rel="noopener">Message on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>
     </div>
   </div>
 </section>
@@ -167,7 +186,8 @@ document.documentElement.classList.add('js');
   <div class="stage" id="stage"></div>
 </dialog>
 
-<script src="/assets/site.js?v=2" defer></script>
+<script src="/assets/site.js?v=3" defer></script>
 <script src="/bear.js?v=5" defer></script>
+<script>if(document.documentElement.hasAttribute("data-preview")){var s=document.createElement("script");s.src="/assets/preview.js?v=1";s.defer=true;document.body.appendChild(s)}</script>
 </body>
 </html>
