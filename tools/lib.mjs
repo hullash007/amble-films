@@ -22,7 +22,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
    and the switcher script is never loaded. Set PREVIEW_THEMES to false to remove it completely. */
 const THEMES = ["one-cream", "original-black", "warm-dark", "light-cream"];
 const DEFAULT_THEME = "one-cream";
-const PREVIEW_THEMES = true;
+const PREVIEW_THEMES = false; // approved 2026-11-24: one-cream is the site theme. Set true to compare themes on preview hosts again.
 const themeBoot = `(function(){var T=${JSON.stringify(THEMES)},t="${DEFAULT_THEME}",h=location.hostname,d=document.documentElement;
 var p=${PREVIEW_THEMES}&&(/^(localhost|127\\.0\\.0\\.1)$/.test(h)||/--amble-films\\.netlify\\.app$/.test(h));
 if(p){try{var q=new URLSearchParams(location.search).get("theme");if(T.indexOf(q)>-1){localStorage.setItem("amble-theme",q);t=q}else{var s=localStorage.getItem("amble-theme");if(T.indexOf(s)>-1)t=s}}catch(e){}d.setAttribute("data-preview","")}
