@@ -1,0 +1,48 @@
+{
+  "_howto": "Every film on the site comes from this file. To change a film: put the new .mp4 in /videos and two 16:9 poster JPGs in /assets/img named NAME-800.jpg and NAME-1600.jpg, set poster to /assets/img/NAME, edit the entry below, then run: node tools/build.mjs. Set featured to true for up to three films to show them on the home page. kind must be one of: client (made for a paying client), concept (a speculative film made to show an idea), study (a short visual experiment). category must be one of: brand, product, advertising, explainer, education, experiments. services lists the service pages the film appears on as an example.",
+
+  "reel": {
+    "title": "Amble Films showreel",
+    "poster": "/assets/img/reel-poster.jpg",
+    "large": "/videos/reel-1080.mp4",
+    "small": "/videos/reel-720.mp4",
+    "alt": "Moments from Amble Films productions"
+  },
+
+  "films": [
+    {
+      "id": "latitudes",
+      "title": "Latitudes",
+      "series": "Locating Places on the Earth, Part 2",
+      "kind": "client",
+      "client": "An online school",
+      "category": "education",
+      "summary": "A recurring cast of teacher and students explains lines of latitude, from a glowing globe to the Equator itself.",
+      "poster": "/assets/img/latitudes",
+      "alt": "A teacher and a student beside a glowing globe marked with coordinates",
+      "featured": true,
+      "services": ["educational-films", "explainer-films"],
+      "versions": [
+        { "lang": "en", "label": "English", "src": "/videos/latitudes-en.mp4", "length": "4:20" },
+        { "lang": "hi", "label": "Hindi", "src": "/videos/latitudes-hi.mp4", "length": "4:49" }
+      ]
+    },
+    {
+      "id": "longitudes",
+      "title": "Longitudes and the Prime Meridian",
+      "series": "Locating Places on the Earth, Part 3",
+      "kind": "client",
+      "client": "An online school",
+      "category": "education",
+      "summary": "The same cast travels from a valley at sunset to Greenwich to show how longitude and time are measured.",
+      "poster": "/assets/img/longitudes",
+      "alt": "A teacher points across a valley at sunset while a student holds a compass",
+      "featured": true,
+      "services": ["educational-films", "explainer-films"],
+      "versions": [
+        { "lang": "en", "label": "English", "src": "/videos/longitudes-en.mp4", "length": "5:02" },
+        { "lang": "hi", "label": "Hindi", "src": "/videos/longitudes-hi.mp4", "length": "5:12" }
+      ]
+    }
+  ]
+}

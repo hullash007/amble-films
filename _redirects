@@ -1,0 +1,9 @@
+# Read by Netlify.
+# The old lesson films page now lives under Services.
+/lesson-films        /services/educational-films/   301
+/lesson-films/*      /services/educational-films/   301
+
+# Source files for the site generator are not part of the public site.
+/content/*           /404.html                      404!
+/tools/*             /404.html                      404!
+/README.md           /404.html                      404!
