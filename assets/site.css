@@ -545,3 +545,138 @@ button.link-arrow{text-align:left}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
+
+/* 14 ---------- AI video studio: hero, preview offer, enterprise, contact (2026-11-25) ---------- */
+.hero-eyebrow{color:var(--ink);display:inline-flex;align-items:center;gap:10px;margin-bottom:22px}
+.hero-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.hero-foot{grid-template-columns:minmax(0,1fr) minmax(0,auto)}
+.hero-actions{max-width:560px;gap:12px}
+.hero-actions .link-arrow{flex-basis:100%}
+.reel .reel-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.reel video{z-index:1;object-position:50% 45%}
+.reel-btn{z-index:2}
+.pf-terms{margin-top:18px;font-size:var(--fs-meta);color:var(--stone);max-width:34rem}
+.price-note{margin-top:28px;font-size:var(--fs-meta);color:var(--stone)}
+.price-note b{font-weight:500;color:var(--ink)}
+.svc-line{display:none}
+/* Enterprise on the home page */
+.ent-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:36px clamp(40px,7vw,120px);align-items:start}
+.ent-head .h2{max-width:18ch}
+.ent-head .lead{margin-top:20px}
+.ent-head .actions{margin-top:32px}
+.ent-uses{border-bottom:1px solid var(--line)}
+.who{margin-top:var(--gap-head);padding-top:24px;border-top:1px solid var(--line)}
+/* Enterprise page */
+.ent-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 var(--gap-grid)}
+.ent-list li{display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:12px;padding-block:22px;border-top:1px solid var(--line-strong)}
+.ent-list .num{grid-row:span 2;padding-top:.35em}
+.ent-list .h3{margin-bottom:4px}
+.ent-list p{color:var(--stone)}
+.scale .link-arrow{margin-top:10px}
+/* Studio: what goes into every film */
+.craft{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.craft li{padding:7px 14px;border:1px solid var(--line-dark);font-size:var(--fs-meta);color:var(--on-dark)}
+/* Contact: on phones the form comes straight after the heading; the details follow it */
+.contact-grid{grid-template-areas:"intro form" "more form";grid-template-rows:auto 1fr}
+.contact-intro{grid-area:intro}
+.enquiry{grid-area:form}
+.contact-more{grid-area:more}
+.contact-more .info{padding-top:22px;border-top:1px solid var(--line);margin-bottom:28px}
+.contact-more .info p{color:var(--stone);max-width:34rem}
+.contact-more .info b{font-weight:500;color:var(--ink)}
+.contact-more .direct{margin-top:0}
+.step .pref legend{float:none;width:auto;margin-bottom:10px;font-size:var(--fs-label);font-weight:500;line-height:1.4}
+.pref-choices{grid-template-columns:1fr 1fr}
+.hint{font-size:var(--fs-meta);color:var(--stone);margin-top:4px}
+.field select{min-width:0}
+
+@media (max-width:1023px){
+  .ent-grid{grid-template-columns:minmax(0,1fr)}
+  .hero-foot{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:860px){
+  .contact-grid{grid-template-areas:"intro" "form" "more";grid-template-rows:auto}
+  .contact-more{margin-top:12px}
+  .ent-list{grid-template-columns:minmax(0,1fr)}
+}
+
+/* 15 ---------- Phones: compact header, first screen, shorter sections ---------- */
+@media (max-width:640px){
+  :root{--sec:60px;--gap-head:28px;--bar:64px}
+  /* Header: logo kept at full presence; the CTA is a slim outlined button inside a 44px tap area */
+  .bar-in{gap:10px}
+  .logo-art{height:46px}
+  .bar-end{gap:4px}
+  .nav-cta{position:relative;min-height:40px;height:40px;padding:0 13px;font-size:.8125rem;letter-spacing:.01em;font-weight:500;border-color:rgba(21,19,15,.32)}
+  .nav-cta::after{content:"";position:absolute;inset:-2px}
+  .menu-btn{width:44px;height:44px}
+  /* Hero: eyebrow, headline, line and both buttons in the first screen */
+  .hero{padding-top:28px}
+  .hero-eyebrow{margin-bottom:14px;font-size:.6875rem}
+  .h-hero{font-size:clamp(2.2rem,1rem + 5.4vw,2.6rem);line-height:1.05}
+  .hero-foot{margin-top:18px;gap:22px}
+  .hero-foot .lead{font-size:1.0625rem;line-height:1.55}
+  .hero-actions{gap:10px}
+  .hero-actions .btn{flex:1 1 100%;min-height:50px}
+  .hero-actions .link-arrow{justify-content:center}
+  .reel{margin-top:32px}
+  .reel-btn span:last-child{white-space:nowrap}
+  .sec-head{gap:10px 24px}
+  .sec-head .h2{max-width:none}
+  .lead{font-size:1.0625rem}
+  .page-hero{padding-block:40px 32px}
+  .page-hero .lead{margin-top:16px}
+  .page-hero .actions{margin-top:26px}
+  .page-hero .actions .btn{flex:1 1 100%}
+  /* Recent films: the lead film large, the other two side by side */
+  .home-films{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 14px}
+  .home-films .film:not(.film-lead) .film-cap{padding-top:12px}
+  .home-films .film:not(.film-lead) .h3{font-size:1.0625rem;line-height:1.25}
+  .home-films .film:not(.film-lead) .tags{letter-spacing:.1em;gap:2px 10px;margin-bottom:6px;font-size:.625rem}
+  .home-films .film:not(.film-lead) .meta{font-size:.8125rem}
+  .home-films .film:not(.film-lead) .play{width:38px;height:38px;left:10px;bottom:10px}
+  .home-films .film:not(.film-lead) .play svg{width:11px;height:11px}
+  .home-films .film:not(.film-lead) .len{right:8px;top:8px;font-size:.625rem;padding:3px 6px}
+  /* Preview offer and lists */
+  .pf-head .actions .btn{flex:1 1 100%}
+  .pf-steps li{padding-block:16px;grid-template-columns:40px minmax(0,1fr)}
+  .points{gap:22px}
+  .points li{padding-top:16px}
+  .ticks li{padding:9px 0 9px 20px}
+  .detail-grid{gap:28px}
+  .approach .steps-compact{display:none}
+  .approach-text{font-size:1.25rem;margin-bottom:16px}
+  .svc-lead{display:none}
+  .svc-line{display:block;color:var(--stone);margin-top:6px}
+  .svc-list>li{padding-block:22px}
+  .ind-list>li,.stages>li{padding-block:28px;gap:12px}
+  .ent-list li{padding-block:16px;grid-template-columns:40px minmax(0,1fr)}
+  .ent-head .actions .btn{flex:1 1 100%}
+  .who{padding-top:18px}
+  .who .chips-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .who .chips-links a{display:flex;width:100%;height:100%;min-height:48px;padding:8px 12px;line-height:1.3;font-size:.8125rem}
+  .chips-links{gap:8px}
+  .chips-links a{padding:0 14px}
+  .cat-grid{gap:32px}
+  .faq summary{padding-block:16px;font-size:1.1875rem}
+  .cta-band{padding-block:56px}
+  /* Form: two-column project types, tighter spacing, full-bleed card */
+  .enquiry{padding:24px var(--gutter) 28px}
+  .step{gap:18px}
+  .step legend{margin-bottom:16px}
+  .choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .choice span{min-height:54px;padding:10px 12px;font-size:.875rem}
+  .pref-choices{grid-template-columns:minmax(0,1fr)}
+  .contact{padding-top:32px}
+  .contact-intro .lead{margin-top:14px}
+  .contact-grid{gap:28px}
+  /* Footer */
+  .foot-grid{padding-block:44px 32px}
+  .foot-logo .logo-art{height:48px}
+}
+@media (max-width:380px){
+  .logo-art{height:42px}
+  .nav-cta{padding:0 11px;font-size:.78rem}
+  .h-hero{font-size:2.2rem}
+  .choice span{font-size:.8125rem;padding:10px}
+}

@@ -4,14 +4,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SITE, CATEGORIES, CATEGORY_INTROS, KINDS, STOCK, STOCK_NOTE, SERVICES, INDUSTRIES, STEPS, FAQ } from "../content/site.mjs";
+import { SITE, CTA, BUDGETS, FROM_PRICE, PRICE_NOTE, PREVIEW, ENTERPRISE, CATEGORIES, CATEGORY_INTROS, KINDS, STOCK, SERVICES, INDUSTRIES, STEPS, FAQ } from "../content/site.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = f => fs.readFileSync(path.join(ROOT, f), "utf8");
 const DATA = JSON.parse(read("content/films.json"));
 const FILMS = DATA.films, REEL = DATA.reel;
 const LOGO = read("content/logo-inline.svg");
-const V = { css: 5, js: 3, bear: 5, preview: 1 };
+const V = { css: 6, js: 4, bear: 6, preview: 1 };
 const TODAY = new Date().toISOString().slice(0, 10);
 
 /* ---------------- Colour themes ----------------
@@ -59,7 +59,7 @@ ${themeBoot}
 <link rel="canonical" href="${url}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${SITE.name}">
-<meta property="og:locale" content="en_IN">
+<meta property="og:locale" content="en_GB">
 <meta property="og:url" content="${url}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
@@ -82,7 +82,7 @@ ${schema}
 </head>`;
 }
 
-const NAV = [["Work", "/work/"], ["Services", "/services/"], ["Industries", "/industries/"], ["Studio", "/studio/"], ["Process", "/process/"]];
+const NAV = [["Work", "/work/"], ["Services", "/services/"], ["Enterprise", "/enterprise/"], ["Industries", "/industries/"], ["Studio", "/studio/"], ["Process", "/process/"]];
 
 function header(active) {
   const cur = h => (active === h ? ' aria-current="page"' : "");
@@ -104,7 +104,7 @@ function header(active) {
       ${links}
     </nav>
     <div class="bar-end">
-      <a class="btn small nav-cta" href="/contact/"${cur("/contact/")}>Start a project</a>
+      <a class="btn small nav-cta" href="${CTA.project.href}"${cur("/contact/")}>${CTA.project.label}</a>
       <button class="menu-btn" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="menu"><span class="burger" aria-hidden="true"></span><span class="menu-word">Menu</span></button>
     </div>
   </div>
@@ -112,7 +112,7 @@ function header(active) {
 
 <dialog class="menu" id="menu" aria-label="Menu">
   <div class="menu-top">
-    <a class="logo" href="/" aria-label="Amble Films, home"><svg class="logo-art" viewBox="0 0 765 344" aria-hidden="true"><use href="#amble-letters"/><use href="#amble-bear-art"/></svg></a>
+    <a class="logo" href="/" aria-label="Amble Films, home"><svg class="logo-art" viewBox="0 0 765 344" aria-hidden="true"><use href="#amble-letters"/><use class="bear-still" href="#amble-bear-art"/><g data-bear-rig></g></svg></a>
     <button class="menu-close" id="menu-close" type="button">Close</button>
   </div>
   <nav class="menu-nav" aria-label="Main">
@@ -120,26 +120,31 @@ function header(active) {
       <li><a href="/"${cur("/")}>Home</a></li>
       <li><a href="/work/"${cur("/work/")}>Work</a></li>
       <li><details${active.startsWith("/services/") ? " open" : ""}><summary>Services</summary><ul class="menu-sub">${mSub}<li><a href="/services/"${cur("/services/")}>All services</a></li></ul></details></li>
+      <li><a href="/enterprise/"${cur("/enterprise/")}>Enterprise</a></li>
       <li><a href="/industries/"${cur("/industries/")}>Industries</a></li>
       <li><a href="/studio/"${cur("/studio/")}>Studio</a></li>
       <li><a href="/process/"${cur("/process/")}>Process</a></li>
     </ul>
   </nav>
   <div class="menu-foot">
-    <a class="btn block" href="/contact/">Start a project</a>
+    <a class="btn block" href="${CTA.project.href}">${CTA.project.label}</a>
+    <a class="btn ghost block" href="${CTA.preview.href}">${CTA.preview.label}</a>
     <p class="menu-contact"><a data-email href="#"></a><a data-wa href="#">WhatsApp</a></p>
   </div>
 </dialog>
 `;
 }
 
-function ctaBand({ title = "Have a story, a product or an idea that deserves a film?", text = "Tell us what the film needs to do. We will reply with questions, a direction and a fixed quote.", need } = {}) {
+function ctaBand({ title = "Have a story, a product or an idea that deserves a film?", text = "Tell us what it needs to do. We will reply with questions, a direction and a fixed quote, and for qualified projects, a free AI video preview.", need, enterprise = false } = {}) {
+  const second = enterprise
+    ? `<a class="link-arrow on-dark" href="${CTA.enterprise.href}">${CTA.enterprise.label} ${arrow}</a>`
+    : `<a class="link-arrow on-dark" href="${need ? contactFor(need) + "&amp;preview=yes" : CTA.preview.href}">${CTA.preview.label} ${arrow}</a>`;
   return `<section class="cta-band" aria-labelledby="cta-title">
   <div class="wrap cta-in">
     <h2 class="h2" id="cta-title">${esc(title)}</h2>
     <div class="cta-side">
       <p>${esc(text)}</p>
-      <div class="actions"><a class="btn inv" href="${need ? contactFor(need) : "/contact/"}">Start a project</a><a class="link-arrow on-dark" data-wa href="#">Message on WhatsApp ${arrow}</a></div>
+      <div class="actions"><a class="btn inv" href="${need ? contactFor(need) : CTA.project.href}">${CTA.project.label}</a>${second}</div>
     </div>
   </div>
 </section>`;
@@ -161,10 +166,10 @@ function footer(extraScripts = "") {
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <a class="logo foot-logo" href="/" aria-label="Amble Films, home"><svg class="logo-art" viewBox="0 0 765 344" aria-hidden="true"><use href="#amble-letters"/><use href="#amble-bear-art"/></svg></a>
-        <p>${esc(SITE.tagline)} A film studio working with clients anywhere.</p>
+        <a class="logo foot-logo" href="/" aria-label="Amble Films, home"><svg class="logo-art" viewBox="0 0 765 344" aria-hidden="true"><use href="#amble-letters"/><use class="bear-still" href="#amble-bear-art"/><g data-bear-rig></g></svg></a>
+        <p>${esc(SITE.tagline)} An AI video production studio working with brands, enterprise teams and agencies worldwide.</p>
       </div>
-      <nav aria-labelledby="fn-studio"><h2 id="fn-studio">Studio</h2><ul><li><a href="/work/">Work</a></li><li><a href="/industries/">Industries</a></li><li><a href="/studio/">The studio</a></li><li><a href="/process/">Process</a></li><li><a href="/contact/">Start a project</a></li></ul></nav>
+      <nav aria-labelledby="fn-studio"><h2 id="fn-studio">Studio</h2><ul><li><a href="/work/">Work</a></li><li><a href="/enterprise/">Enterprise</a></li><li><a href="/industries/">Industries</a></li><li><a href="/studio/">The studio</a></li><li><a href="/process/">Process</a></li><li><a href="${CTA.project.href}">${CTA.project.label}</a></li><li><a href="${CTA.preview.href}">${CTA.preview.short}</a></li></ul></nav>
       <nav aria-labelledby="fn-services"><h2 id="fn-services">Services</h2><ul>${svcLinks}</ul></nav>
       <div><h2>Contact</h2><ul><li><a data-email href="#"></a></li><li><a data-wa href="#">WhatsApp ${esc(SITE.whatsappDisplay)}</a></li></ul>${socialList()}</div>
     </div>
@@ -208,20 +213,22 @@ function filmCard(f, { eager = false, lead = false, sizes = "(max-width: 860px) 
 </article>`;
 }
 
-function reelFigure() {
+// The poster is a real <img> (sized per screen) under the muted loop, so phones download the small frame
+function reelFigure({ eager = false } = {}) {
   return `<figure class="reel">
-    <video data-reel data-large="${REEL.large}" data-small="${REEL.small}" poster="${REEL.poster}" muted loop playsinline preload="none" aria-hidden="true" width="1920" height="1080"></video>
+    <img class="reel-poster" src="${REEL.posterSmall || REEL.poster}" srcset="${REEL.posterSmall ? REEL.posterSmall + " 960w, " : ""}${REEL.poster} 1920w" sizes="100vw" width="1920" height="1080" alt="${esc(REEL.alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">
+    <video data-reel data-large="${REEL.large}" data-small="${REEL.small}" muted loop playsinline preload="none" aria-hidden="true" width="1920" height="1080"></video>
     <button class="reel-btn" type="button" data-play-reel><span class="play" aria-hidden="true">${playIcon}</span><span>Watch the reel</span></button>
   </figure>`;
 }
 
-// A licensed stock loop, always captioned as illustrative so it is never mistaken for Amble Films work.
+// A licensed stock loop used purely as atmosphere (backgrounds, category and service visuals).
+// It is never listed as a film, given a title or presented as client work. Licences: docs/stock-asset-licenses.md
 function stockVisual(id, { ratio = "wide", still = false } = {}) {
   const s = STOCK[id]; if (!s) return "";
   return `<figure class="stock ${still ? "still-only" : ratio}">
     ${still ? "" : `<video data-ambient data-large="/videos/stock/${id}-720.mp4" data-small="/videos/stock/${id}-480.mp4" muted loop playsinline preload="none" aria-hidden="true" width="1280" height="720"></video>`}
     <img src="/assets/img/stock/${id}-800.jpg" srcset="/assets/img/stock/${id}-800.jpg 800w, /assets/img/stock/${id}-1600.jpg 1600w" sizes="100vw" width="1600" height="900" alt="${esc(s.alt)}" loading="lazy" decoding="async">
-    <figcaption>${esc(STOCK_NOTE)}</figcaption>
   </figure>`;
 }
 
@@ -242,21 +249,21 @@ const secHead = (eyebrow, title, id, aside = "") => `<div class="sec-head">
 
 const stepsCompact = () => `<ol class="steps-compact">${STEPS.map((s, i) => `<li><span class="num">${pad(i + 1)}</span><h3 class="h3">${s.name}</h3><p>${esc(s.line)}</p></li>`).join("")}</ol>`;
 
-/* Preview-first: conservative public wording only. The commercial terms (eligibility, length, fees, rights)
-   are in docs/preview-first-offer.md and are NOT published until the owner approves them. */
-function previewFirst({ alt = true } = {}) {
-  return `<section class="section preview-first${alt ? " alt" : ""}" aria-labelledby="pf-title">
+/* The complimentary AI video preview. Wording comes from PREVIEW in content/site.mjs;
+   the internal policy behind it (eligibility, length, feedback, rights) is docs/preview-first-offer.md. */
+function previewFirst({ alt = true, need = "", id = "preview" } = {}) {
+  const href = need ? contactFor(need) + "&amp;preview=yes" : CTA.preview.href;
+  return `<section class="section preview-first${alt ? " alt" : ""}" id="${id}" aria-labelledby="pf-title">
   <div class="wrap pf-in">
     <div class="pf-head">
-      <p class="eyebrow">Before you commit</p>
-      <h2 class="h2" id="pf-title">See the direction before you commit.</h2>
-      <p class="lead">We start by understanding what your film needs to achieve, then develop a creative direction that shows how it could come together: the idea, the look and the feel. You review the approach before full production begins.</p>
-      <div class="actions"><a class="btn" href="/contact/">Discuss your project</a><a class="link-arrow" href="/process/">How we work ${arrow}</a></div>
+      <p class="eyebrow">${esc(PREVIEW.eyebrow)}</p>
+      <h2 class="h2" id="pf-title">${esc(PREVIEW.title)}</h2>
+      <p class="lead">${esc(PREVIEW.text)}</p>
+      <div class="actions"><a class="btn" href="${href}">${CTA.preview.label}</a></div>
+      <p class="pf-terms">${esc(PREVIEW.terms)}</p>
     </div>
     <ol class="pf-steps">
-      <li><span class="num">01</span><h3 class="h3">Your objective, understood</h3><p>One conversation about what the film must do, who must watch it and where it will run.</p></li>
-      <li><span class="num">02</span><h3 class="h3">A direction you can see</h3><p>The idea, references and look for your film, shaped into something you can react to rather than imagine.</p></li>
-      <li><span class="num">03</span><h3 class="h3">Production when it feels right</h3><p>Full production starts once you are confident in the approach, with the plan and the price agreed first.</p></li>
+      ${PREVIEW.steps.map(([t, p], i) => `<li><span class="num">${pad(i + 1)}</span><h3 class="h3">${esc(t)}</h3><p>${esc(p)}</p></li>`).join("\n      ")}
     </ol>
   </div>
 </section>`;
@@ -276,4 +283,4 @@ function write(p, html, { sitemap = true, priority = "0.7" } = {}) {
   if (sitemap) written.push([p, priority]);
 }
 
-export { socialList, head, header, footer, ctaBand, filmCard, filmData, reelData, reelFigure, stockVisual, previewFirst, pageHero, secHead, stepsCompact, write, written, esc, svc, svcShort, contactFor, arrow, playIcon, pad, ld, ORG, crumbs, FILMS, REEL, TODAY, ROOT, SITE, CATEGORIES, CATEGORY_INTROS, KINDS, STOCK, STOCK_NOTE, SERVICES, INDUSTRIES, STEPS, FAQ };
+export { socialList, head, header, footer, ctaBand, filmCard, filmData, reelData, reelFigure, stockVisual, previewFirst, pageHero, secHead, stepsCompact, write, written, esc, svc, svcShort, contactFor, arrow, playIcon, pad, ld, ORG, crumbs, FILMS, REEL, TODAY, ROOT, SITE, CTA, BUDGETS, FROM_PRICE, PRICE_NOTE, PREVIEW, ENTERPRISE, CATEGORIES, CATEGORY_INTROS, KINDS, STOCK, SERVICES, INDUSTRIES, STEPS, FAQ };

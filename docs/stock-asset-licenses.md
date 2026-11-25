@@ -3,8 +3,8 @@
 Not public: `/docs/*` returns 404 on the website (see `_redirects`).
 
 Every stock asset on amblefilms.in is listed here. **Do not add a stock file to the site without adding a row first.**
-Stock footage is never presented as Amble Films work: every use carries the caption
-*"Illustrative footage: licensed stock, graded by Amble Films. Not client work."* (`STOCK_NOTE` in `content/site.mjs`),
+Stock footage is never presented as Amble Films work:
+*(from 25 Nov 2026, as approved by the owner)* it is used only as atmosphere, with no public caption (the licence needs no attribution), never given a title or a client,
 and stock is never listed in `content/films.json`.
 
 ## Licence basis (Mixkit)
@@ -47,4 +47,4 @@ still posters. Original downloads are kept outside the repository in `C:\Users\m
 2. Watch every second: no readable logos, brand names, recognisable products, artworks or identifiable private property.
    Prefer clips without identifiable people; if people appear, never imply they endorse Amble Films.
 3. Add a row above before the file is committed.
-4. Add it to `STOCK` in `content/site.mjs` and use it only through `stockVisual()`, which adds the caption.
+4. Add it to `STOCK` in `content/site.mjs` and use it only through `stockVisual()` (atmosphere only, no caption).

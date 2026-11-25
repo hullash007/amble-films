@@ -3,10 +3,11 @@
 
   "reel": {
     "title": "Amble Films showreel",
-    "poster": "/assets/img/reel-studio-poster.jpg",
-    "large": "/videos/reel-studio-1080.mp4",
-    "small": "/videos/reel-studio-720.mp4",
-    "alt": "Moments from Amble Films productions: a film set, a watch commercial, a lesson film and a colour grading suite"
+    "poster": "/assets/img/reel-ai-poster.jpg",
+    "posterSmall": "/assets/img/reel-ai-poster-960.jpg",
+    "large": "/videos/reel-ai-1080.mp4",
+    "small": "/videos/reel-ai-720.mp4",
+    "alt": "A rose-gold chronograph on a black marble plinth, silk drifting through smoke behind it: an AI-generated watch commercial from the Amble Films reel"
   },
 
   "films": [

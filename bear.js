@@ -62,8 +62,10 @@ const ACTS = {
   pace:    [0, 0]       // a few steps forward along the letter, a look about, and back (it keeps its own time, see below)
 };
 /* One round. It is shuffled before every pass, and no activity follows itself. */
-const ROUND = ["ground", "air", "pace", "survey", "sit", "ground", "stretch", "alert", "pace", "sigh", "peer",
-               "air", "shuffle", "doze", "survey", "pace", "ground", "sway", "air", "alert", "peer", "shuffle"];
+const ROUND = ["ground", "air", "pace", "survey", "sit", "pace", "ground", "stretch", "alert", "pace", "sigh", "peer",
+               "air", "pace", "shuffle", "doze", "survey", "pace", "ground", "sway", "air", "alert", "pace", "peer", "shuffle"];
+/* Every bear (header, menu, footer) opens the same way: a breath of air, then a walk along the letter */
+const OPENER = ["air", "pace"];
 
 /* ---------- The few steps it takes along the letter ---------- */
 const STEP = 12;              // how far each paw steps (kept short, so its nose stays clear of the "b")
@@ -436,21 +438,21 @@ function makeStage(group) {
 }
 
 /* ---------- Start it on the page ---------- */
-function mount(root, skin, stage) {
+function mount(root, skin, stage, gate) {
   const bear = new Bear(root, { skin });
   /* The wordmark is whole from the very first frame: the entrance is skipped and the bear
      starts already standing on the letters, going about its routine. */
   bear.t = T_INTRO; bear.advance(0.5); bear.render(stage);
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return bear;
-  let last = 0, lastFrame = 0, idleSince = performance.now();
-  const wake = () => { idleSince = performance.now(); };
-  ["pointermove", "pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, wake, { passive: true }));
+  bear.queue = OPENER.slice();
+  bear.nextAct = bear.t + 0.6;
+  let last = 0;
+  /* Full frame rate for smooth movement. It never freezes for lack of interaction; it only rests
+     while it cannot be seen (tab hidden, scrolled away, menu closed), and carries on where it left off. */
   function tick(now) {
     requestAnimationFrame(tick);
-    if (document.hidden || now - idleSince > 60000) { last = 0; return; }   // it rests while the tab is hidden or nobody has moved for a minute
-    if (now - lastFrame < 32) return;                                       // about 30 frames a second, plenty for a small logo
-    lastFrame = now;
-    const dt = last ? Math.min((now - last) / 1000, 0.05) : 1 / 30;
+    if (document.hidden || (gate && !gate())) { last = 0; return; }
+    const dt = last ? Math.min((now - last) / 1000, 0.05) : 1 / 60;
     last = now;
     bear.step(dt); bear.render(stage);
   }
@@ -460,21 +462,38 @@ function mount(root, skin, stage) {
 
 window.AmbleBear = { Bear, mount, makeSkin, makeStage, T_INTRO };
 
-/* The still logo shows until the page has settled; only then is the bear built and set moving. */
+/* One living bear, used on every logo: the header, the phone menu and the footer.
+   All of them share the outline traced once from the logo and the same skeleton and routine; each keeps its own
+   shuffled order so two bears on screen never move in step. Only the bear moves: the wordmark stays still.
+   The still logo bear shows until the bear is built (and if scripts never run). With reduced motion the bear stands in one calm pose. */
 function start() {
-const rig = document.getElementById("bear-rig");
-const art = document.querySelector("#amble-bear-art path");
-const letters = document.getElementById("amble-letters");
-if (rig && art) {
+  const art = document.querySelector("#amble-bear-art path");
+  if (!art) return;
+  const header = document.getElementById("bear-rig");
+  const rigs = [...(header ? [header] : []), ...document.querySelectorAll("[data-bear-rig]")];
+  if (!rigs.length) return;
   const m = /translate\(\s*([-\d.]+)[ ,]+([-\d.]+)/.exec(art.getAttribute("transform") || "");
-  const skin = makeSkin(rig.ownerSVGElement, art.getAttribute("d"), m ? +m[1] : 0, m ? +m[2] : 0);
-  const still = document.getElementById("bear-static");
-  if (still) still.style.display = "none";
-  const bear = mount(rig, skin, letters ? makeStage(letters) : null);
-  const logo = rig.closest(".logo");
-  if (logo) logo.addEventListener("pointerenter", () => bear.notice());
+  const skin = makeSkin(rigs[0].ownerSVGElement, art.getAttribute("d"), m ? +m[1] : 0, m ? +m[2] : 0);
+  const letters = document.getElementById("amble-letters");
+  rigs.forEach(r => {
+    const svg = r.ownerSVGElement, isHeader = r === header;
+    const still = isHeader ? document.getElementById("bear-static") : svg.querySelector(".bear-still");
+    if (still) still.style.display = "none";
+    // Each bear moves only while it can be seen: the header always, the menu while open, the footer while on screen
+    let gate = null;
+    const dlg = r.closest("dialog");
+    if (dlg) gate = () => dlg.open;
+    else if (!isHeader && "IntersectionObserver" in window) {
+      let seen = false;
+      new IntersectionObserver(([e]) => { seen = e.isIntersecting; }, { rootMargin: "80px" }).observe(svg);
+      gate = () => seen;
+    }
+    const bear = mount(r, skin, isHeader && letters ? makeStage(letters) : null, gate);
+    const logo = r.closest(".logo");
+    if (logo) logo.addEventListener("pointerenter", () => bear.notice());
+  });
 }
-}
-const later = () => ("requestIdleCallback" in window) ? requestIdleCallback(start, { timeout: 2500 }) : setTimeout(start, 300);
-if (document.readyState === "complete") later(); else addEventListener("load", later, { once: true });
+// Starts as soon as the page is parsed (it no longer waits for every image and video), when the browser is free
+const later = () => ("requestIdleCallback" in window) ? requestIdleCallback(start, { timeout: 800 }) : setTimeout(start, 120);
+if (document.readyState !== "loading") later(); else addEventListener("DOMContentLoaded", later, { once: true });
 })();

@@ -29,9 +29,20 @@ To make a theme final: set `DEFAULT_THEME` to it, set `PREVIEW_THEMES` to `false
 
 ## Stock footage
 
-Only through `stockVisual()` in `/tools/lib.mjs`, which always adds the caption "Illustrative footage: licensed stock,
-graded by Amble Films. Not client work." Every asset must be recorded in `docs/stock-asset-licenses.md` first.
-Never list stock in `films.json`.
+Only through `stockVisual()` in `/tools/lib.mjs`, as atmosphere (backgrounds, category and service visuals), with no
+public caption. Never give stock a title, list it in `films.json` or present it as client work. Every asset must be
+recorded in `docs/stock-asset-licenses.md` (source, licence, permitted use) before it is used.
+
+## Free AI video preview, pricing and enterprise
+
+- Public preview wording, CTA labels, USD budget ranges and the "from $100" line: top of `/content/site.mjs`.
+- Internal preview policy (eligibility, length, feedback, rights): `docs/preview-first-offer.md`.
+- Enterprise page copy: `ENTERPRISE` in `/content/site.mjs`.
+
+## The bear
+
+`bear.js` animates the bear on every logo (header, phone menu, footer) from one shared outline. A logo gets a bear by
+containing `<use class="bear-still" href="#amble-bear-art"/><g data-bear-rig></g>` (the header uses `#bear-static` and `#bear-rig`).
 
 ## Changing words
 

@@ -105,9 +105,27 @@ $$("form[data-enquiry]").forEach(form => {
   const status = $(".form-status", form), submit = $("button[type=submit]", form);
   let at = 0;
 
-  // A service page can pick the project type: /contact/?need=Brand%20film
-  const need = new URLSearchParams(location.search).get("need");
+  // Links can pick the project type and the preview: /contact/?need=Brand%20film&preview=yes
+  const q = new URLSearchParams(location.search), need = q.get("need"), wantsPreview = q.get("preview") === "yes";
+  const ENT = "Enterprise / multi-video programme";
+  const KEY = "amble-enquiry";
+  // Keep what the visitor has typed if the page reloads (this tab only; cleared once sent)
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(KEY) || "null");
+    if (saved) Object.entries(saved).forEach(([k, v]) => {
+      $$("[name='" + k + "']", form).forEach(el => { if (el.type === "radio") el.checked = el.value === v; else if (el.name !== "_honey") el.value = v; });
+    });
+  } catch (e) {}
+  const save = () => { try { const o = {}; new FormData(form).forEach((v, k) => { if (k[0] !== "_") o[k] = v; }); sessionStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} };
+  form.addEventListener("input", save); form.addEventListener("change", save);
   if (need) { const r = $$("input[name=kind]", form).find(i => i.value === need); if (r) r.checked = true; }
+  if (wantsPreview) { const r = $("input[name=preview]", form); if (r) r.checked = true; }
+  if (need === ENT) { const b = $("select[name=budget]", form); if (b && !b.value) b.value = "Enterprise / multi-video engagement"; }
+  // The page heading follows the way the visitor arrived
+  const intro = (eyebrow, title, lead) => { const e = $("[data-intro-eyebrow]"), t = $("[data-intro-title]"), l = $("[data-intro-lead]");
+    if (e) e.textContent = eyebrow; if (t) t.textContent = title; if (l) l.textContent = lead; };
+  if (need === ENT) intro("Enterprise", "Tell us about your enterprise project.", "Share the programme, the teams involved and the timeline. We reply by email with questions, an approach and a proposal.");
+  else if (wantsPreview) intro("Free AI video preview", "Request your free AI video preview.", "Tell us what you want to make. For qualified projects, we create a 30 to 45 second AI video preview built around your brief, with no obligation to continue.");
 
   function show(i, focus) {
     at = i;
@@ -116,11 +134,12 @@ $$("form[data-enquiry]").forEach(form => {
     if (bar) bar.style.width = ((i + 1) / steps.length * 100) + "%";
     if (focus) { const first = $("input:not([type=hidden]):not([tabindex='-1']), textarea, select", steps[i]); (steps[i].querySelector("input:checked") || first)?.focus(); }
   }
-  const msgFor = el => el.validity.valueMissing ? (el.type === "radio" ? "Please choose one." : "Please fill this in.")
-                     : el.validity.typeMismatch ? "Please check this email address." : "";
+  const EMAIL_OK = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[A-Za-z]{2,}$/;
+  const msgFor = el => el.validity.valueMissing || (el.required && !el.value.trim()) ? (el.type === "radio" ? "Please choose one." : "Please fill this in.")
+                     : el.type === "email" && (el.validity.typeMismatch || !EMAIL_OK.test(el.value.trim())) ? "Please check this email address." : "";
   function check(step) {
     let firstBad = null;
-    const radios = $$("input[type=radio]", step);
+    const radios = $$("input[type=radio][name=kind]", step);
     if (radios.length) {
       const ok = radios.some(r => r.checked), err = $(".err", step), box = $(".choices", step);
       err.textContent = ok ? "" : "Please choose one."; box.classList.toggle("bad", !ok);
@@ -137,7 +156,7 @@ $$("form[data-enquiry]").forEach(form => {
   }
   $$("[data-next]", form).forEach(b => b.addEventListener("click", () => { if (check(steps[at])) show(at + 1, true); }));
   $$("[data-back]", form).forEach(b => b.addEventListener("click", () => show(at - 1, true)));
-  $$("input[type=radio]", form).forEach(r => r.addEventListener("change", () => { const s = r.closest(".step"); $(".err", s).textContent = ""; $(".choices", s).classList.remove("bad"); }));
+  $$("input[type=radio][name=kind]", form).forEach(r => r.addEventListener("change", () => { const s = r.closest(".step"); $("#f-kind-err", s).textContent = ""; $(".choices", s).classList.remove("bad"); }));
   // Errors clear while the visitor types (never on blur), so nothing moves under the pointer when they click Send
   $$("input[required]:not([type=radio]), textarea[required]", form).forEach(el => el.addEventListener("input", () => {
     const box = el.closest(".field");
@@ -170,8 +189,10 @@ $$("form[data-enquiry]").forEach(form => {
         Phone: d.get("phone") || "Not given",
         Organisation: d.get("company") || "Not given",
         Need: d.get("kind"),
+        "Free AI preview": d.get("preview") || "Not answered",
         Audience: d.get("audience") || "Not given",
-        Budget: d.get("budget") || "Not given",
+        "Intended use": d.get("use") || "Not given",
+        "Budget (USD)": d.get("budget") || "Not given",
         Timing: d.get("timing") || "Not given",
         Project: d.get("message"),
         Page: location.pathname + location.search
@@ -183,7 +204,10 @@ $$("form[data-enquiry]").forEach(form => {
       const done = document.createElement("div");
       done.className = "sent"; done.tabIndex = -1; done.setAttribute("role", "status");
       done.innerHTML = '<p class="eyebrow">Enquiry sent</p><h2 class="h3">Thank you. Your enquiry is with us.</h2><p></p><div class="actions"><a class="btn" href="/work/">Watch our films</a><a class="link-arrow" data-wa-done>Message us on WhatsApp <span class="arr" aria-hidden="true">→</span></a></div>';
-      $("p:not(.eyebrow)", done).textContent = "We will reply to " + d.get("email") + " by email. A copy of your message is on its way to you now.";
+      const pv = String(d.get("preview") || "").startsWith("Yes");
+      $("p:not(.eyebrow)", done).textContent = "We will reply to " + d.get("email") + " by email with a few questions and a suggested next step"
+        + (pv ? ", including whether your project qualifies for a free AI video preview." : ".") + " A copy of your message is on its way to you now.";
+      try { sessionStorage.removeItem(KEY); } catch (e) {}
       const wa = $("[data-wa-done]", done); wa.href = waLink(); wa.target = "_blank"; wa.rel = "noopener";
       form.replaceChildren(done); done.focus();
     })
